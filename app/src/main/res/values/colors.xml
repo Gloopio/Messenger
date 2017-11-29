@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FBA531</color>
+    <color name="colorPrimaryDark">#F96D2E</color>
+    <color name="colorAccent">#F96D2E</color>
+
+    <color name="popupBackground">#0B6394</color>
+    <color name="popupButtonBackground">#ffffff</color>
+    <color name="popupButtonForeground">#0B6394</color>
+    <!--<color name="listBackground">#EEEEEE</color>-->
+    <color name="listBackground">#ffffff</color>
+
+    <color name="textColor">#ffffff</color>
+
+    <color name="background">#ffffff</color>
+    <color name="background_splash_screen">#ffffff</color>
+
+    <color name="color_delete">#ff5722</color>
+    <color name="color_mark">#4caf50</color>
+
+    <color name="color1">#199AE4</color>
+    <color name="color2">#8E31B5</color>
+    <color name="color3">#FDB22B</color>
+    <color name="color4">#4251B2</color>
+    <color name="color5">#79B049</color>
+    <color name="color6">#D52A6D</color>
+
+
+    <color name="Blue">#4354AF</color>
+    <color name="Red">#E34346</color>
+    <color name="Green">#7BAF4F</color>
+    <color name="Yellow">#FDB12F</color>
+    <color name="Purple">#8D38B2</color>
+    <color name="Orange">#ffa100</color>
+    <color name="Pink">#D52A6D</color>
+    <color name="Violet">#6b0597</color>
+
+    <color name="Gray">#6e6e6d</color>
+
+
+    <color name="window_background">#FFF5F5F5</color>
+
+
+    <color name="login_button_background">#F96D2E</color>
+    <color name="login_button_text_color">#fff</color>
+    <color name="login_text_color">#fff</color>
+
+    <color name="card_background_color">#fff</color>
+    <color name="edit_text_color">#fff</color>
+
+    <color name="intro_1">#24B48F</color>
+    <color name="intro_2">#3E94FA</color>
+    <color name="intro_3">#F08D2B</color>
+
+    <color name="white">@android:color/white</color>
+    <color name="chat_user_reply_background_color">#c8f0ff</color>
+    <color name="chat_company_reply_background_color">#F5F5F5</color>
+    <color name="gray">@android:color/darker_gray</color>
+    <color name="transparent">@android:color/transparent</color>
+    <color name="orange">@android:color/holo_blue_light</color>
+    <color name="background_tab_pressed">#6633B5E5</color>
+
+</resources>
