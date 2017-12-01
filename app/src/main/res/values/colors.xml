@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FBA531</color>
-    <color name="colorPrimaryDark">#F96D2E</color>
-    <color name="colorAccent">#F96D2E</color>
+    <color name="colorPrimary">#47D591</color>
+    <color name="colorPrimaryDark">#39b97c</color>
+    <color name="colorAccent">#47D591</color>
 
     <color name="popupBackground">#0B6394</color>
     <color name="popupButtonBackground">#ffffff</color>
@@ -11,6 +11,7 @@
     <color name="listBackground">#ffffff</color>
 
     <color name="textColor">#ffffff</color>
+    <color name="hint_color">#a6a6a6</color>
 
     <color name="background">#ffffff</color>
     <color name="background_splash_screen">#ffffff</color>
@@ -41,7 +42,7 @@
     <color name="window_background">#FFF5F5F5</color>
 
 
-    <color name="login_button_background">#F96D2E</color>
+    <color name="login_button_background">#47D591</color>
     <color name="login_button_text_color">#fff</color>
     <color name="login_text_color">#fff</color>
 

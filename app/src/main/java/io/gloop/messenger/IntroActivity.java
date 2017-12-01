@@ -25,6 +25,8 @@ public class IntroActivity extends AppIntro {
                 R.drawable.intro_task,
                 getResources().getColor(R.color.intro_1)));
 
+//        addSlide(new WelcomeFragment());
+
         addSlide(AppIntroFragment.newInstance("Collaborate",
                 "Work together on tasks.",
                 R.drawable.intro_collaborate,
@@ -41,7 +43,7 @@ public class IntroActivity extends AppIntro {
         // setSeparatorColor(Color.parseColor("#2196F3"));
 
         // Hide Skip/Done button.
-        showSkipButton(true);
+        showSkipButton(false);
         // setProgressButtonEnabled(false);
 
         setColorTransitionsEnabled(true);

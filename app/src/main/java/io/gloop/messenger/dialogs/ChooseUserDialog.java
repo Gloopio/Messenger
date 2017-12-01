@@ -88,7 +88,7 @@ public class ChooseUserDialog {
 
                 GloopGroup group = new GloopGroup();
                 group.addMember(memberId);
-                group.addMember(userInfo.getEmail());
+                group.addMember(userInfo.getPhone());
                 group.save();
 
                 // add permissions to group

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.FacebookSdk;
 
 import io.fabric.sdk.android.Fabric;
 import io.gloop.Gloop;
@@ -28,7 +27,7 @@ public class SplashActivity extends Activity {
         super.onPostCreate(savedInstanceState);
 
         Fabric.with(this, new Crashlytics());
-        FacebookSdk.sdkInitialize(getApplicationContext());
+//        FacebookSdk.sdkInitialize(getApplicationContext());
         SharedPreferencesStore.setContext(getBaseContext());
 
         if (SharedPreferencesStore.isFirstStart())

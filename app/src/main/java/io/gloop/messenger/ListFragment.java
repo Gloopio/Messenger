@@ -294,7 +294,7 @@ public class ListFragment extends Fragment {
             } else {
                 String search = s.toLowerCase();
                 for (Chat task : originalList) {
-                    if (!task.getUser2().getEmail().toLowerCase().startsWith(search))   // TODO get other user then itself
+                    if (!task.getUser2().getUserName().toLowerCase().startsWith(search))   // TODO get other user then itself
                         list.remove(task);
                 }
             }
@@ -306,7 +306,6 @@ public class ListFragment extends Fragment {
             final View mView;
             final TextView mContentView;
             final ImageView mImage;
-            final ImageView mTaskDone;
 
             final List<CircleImageView> memberImages = new ArrayList<>();
 
@@ -316,7 +315,6 @@ public class ListFragment extends Fragment {
                 mView = view.findViewById(R.id.card_view);
                 mContentView = (TextView) view.findViewById(R.id.board_name);
                 mImage = (ImageView) view.findViewById(R.id.avatar);
-                mTaskDone = (ImageView) view.findViewById(R.id.task_done);
 
                 memberImages.add((CircleImageView) view.findViewById(R.id.user_image1));
                 memberImages.add((CircleImageView) view.findViewById(R.id.user_image2));

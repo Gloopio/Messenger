@@ -16,38 +16,31 @@
   -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group
-        android:id="@+id/nav_group_1"
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_dashboard"
-            android:title="@string/home"/>
-        <item
-            android:id="@+id/nav_my_tasks"
-            android:icon="@drawable/ic_assignment_black_24dp"
-            android:title="Open Tasks"/>
-        <item
-            android:id="@+id/nav_groups"
-            android:icon="@drawable/ic_assignment_black_24dp"
-            android:title="Closed Tasks"/>
-    </group>
 
-    <group
-        android:id="@+id/nav_group_2"
-        android:checkableBehavior="none">
-        <item
-            android:id="@+id/nav_user"
-            android:icon="@drawable/ic_face_black_24dp"
-            android:title="@string/my_profile"/>
-        <item
-            android:id="@+id/nav_night_mode"
-            android:icon="@drawable/ic_settings_brightness_black_24dp"
-            android:title="@string/night_mode"/>
-        <item
-            android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:title="@string/logout"/>
-    </group>
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_dashboard"
+        android:title="@string/home"/>
+    <item
+        android:id="@+id/nav_my_tasks"
+        android:icon="@drawable/ic_assignment_black_24dp"
+        android:title="Open Tasks"/>
+    <item
+        android:id="@+id/nav_groups"
+        android:icon="@drawable/ic_assignment_black_24dp"
+        android:title="Closed Tasks"/>
+
+    <item
+        android:id="@+id/nav_user"
+        android:icon="@drawable/ic_face_black_24dp"
+        android:title="@string/my_profile"/>
+    <item
+        android:id="@+id/nav_night_mode"
+        android:icon="@drawable/ic_settings_brightness_black_24dp"
+        android:title="@string/night_mode"/>
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_exit_to_app_black_24dp"
+        android:title="@string/logout"/>
 
 </menu>

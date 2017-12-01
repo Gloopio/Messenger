@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/intro_welcom_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:text="Enter your phone number"/>
+
+        <net.rimoto.intlphoneinput.IntlPhoneInput
+            android:layout_marginTop="50dp"
+            android:id="@+id/my_phone_input"
+            android:layout_width="match_parent"
+            app:textColorHint="@color/hint_color"
+            android:layout_height="wrap_content"
+            app:flagPaddingBottom="4dp"
+            app:flagPaddingEnd="4dp"
+            app:flagPaddingStart="4dp"
+            app:flagPaddingTop="4dp"
+            app:backgroundTint="@color/colorPrimary"
+            app:textColor="@color/colorPrimary"
+            app:textSize="14sp"/>
+
+
+        <Button
+            android:id="@+id/intro_register_phone_number"
+            style="?android:textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/login_button_background"
+            android:text="Continue"
+            android:textColor="@color/login_button_text_color"
+            android:textStyle="bold"/>
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

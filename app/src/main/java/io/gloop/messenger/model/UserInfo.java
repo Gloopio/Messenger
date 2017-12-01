@@ -13,20 +13,21 @@ import io.gloop.GloopObject;
 
 public class UserInfo extends GloopObject {
 
-    private String email;
+    private String phone;
     private String imageURL;
     private String userName;
-    private List<String> favoriesBoardId = new ArrayList<>();
+    private List<String> favories = new ArrayList<>();
 
     public UserInfo() {
     }
 
-    public String getEmail() {
-        return email;
+
+    public String getPhone() {
+        return phone;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Uri getImageURL() {
@@ -49,29 +50,16 @@ public class UserInfo extends GloopObject {
         this.userName = userName;
     }
 
-    public void addFavoriteBoardId(String boardId) {
-        if (this.favoriesBoardId == null)
-            this.favoriesBoardId = new ArrayList<>();
-        this.favoriesBoardId.add(boardId);
-    }
-
-    public void removeFavoriteBoardId(String boardId) {
-        if (this.favoriesBoardId != null)
-            this.favoriesBoardId.remove(boardId);
-    }
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
 
-    public List<String> getFavoritesBoardId() {
-        if (favoriesBoardId == null)
-            return new ArrayList<>();
-        else
-            return favoriesBoardId;
+    public List<String> getFavories() {
+        return favories;
     }
 
-    public void setFavoritesBoardId(List<String> favoriesBoardId) {
-        this.favoriesBoardId = favoriesBoardId;
+    public void setFavories(List<String> favories) {
+        this.favories = favories;
     }
 }
