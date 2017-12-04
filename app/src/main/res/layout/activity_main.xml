@@ -6,39 +6,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@null"
+    android:fitsSystemWindows="true"
     tools:context=".ChatActivity">
 
-    <ListView
-        android:id="@+id/chat_list_view"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="8dp"
-        android:paddingBottom="4dp"
-        android:layout_marginBottom="4dp"
-        android:clipToPadding="false"
-        android:divider="@drawable/chat_divider"
-        android:scrollbarStyle="outsideOverlay"
-        android:layout_above="@+id/bottomlayout"
-        android:stackFromBottom="false"
-        android:transcriptMode="normal"/>
+        android:layout_below="@+id/header">
 
-    <LinearLayout
-        android:id="@+id/bottomlayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginBottom="8dp">
-
-        <br.com.instachat.emojilibrary.model.layout.WhatsAppPanel
-            android:id="@+id/bottompanel"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"/>
+            android:layout_height="wrap_content">
 
-        <!--<LinearLayout-->
+            <ListView
+                android:id="@+id/chat_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/bottompanel"
+                android:layout_marginBottom="4dp"
+                android:clipToPadding="false"
+                android:divider="@drawable/chat_divider"
+                android:paddingBottom="4dp"
+                android:paddingTop="8dp"
+                android:scrollbarStyle="outsideOverlay"
+                android:stackFromBottom="true"
+                android:transcriptMode="normal"/>
+
+            <!--<LinearLayout-->
+            <!--android:id="@+id/bottomlayout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginBottom="8dp">-->
+
+            <br.com.instachat.emojilibrary.model.layout.WhatsAppPanel
+                android:id="@+id/bottompanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="20dp"/>
+
+            <!--<LinearLayout-->
             <!--android:layout_width="0dp"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:layout_weight="1"-->
@@ -51,29 +63,28 @@
             <!--android:background="@drawable/input">-->
 
             <!--<ImageView-->
-                <!--android:id="@+id/emojiButton"-->
-                <!--android:layout_width="24dp"-->
-                <!--android:layout_height="24dp"-->
-                <!--android:layout_gravity="bottom"-->
-                <!--android:src="@drawable/input_emoji"/>-->
+            <!--android:id="@+id/emojiButton"-->
+            <!--android:layout_width="24dp"-->
+            <!--android:layout_height="24dp"-->
+            <!--android:layout_gravity="bottom"-->
+            <!--android:src="@drawable/input_emoji"/>-->
 
             <!--<EditText-->
-                <!--android:id="@+id/chat_edit_text1"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="bottom"-->
-                <!--android:layout_marginLeft="12dp"-->
-                <!--android:hint="@string/type_your_message"-->
-                <!--android:singleLine="false"-->
-                <!--android:inputType="textMultiLine"-->
-                <!--android:textSize="18sp"-->
-                <!--android:textColorHint="#c4c0bd"-->
-                <!--android:textColor="@android:color/black"-->
-                <!--android:background="@null"/>-->
+            <!--android:id="@+id/chat_edit_text1"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom"-->
+            <!--android:layout_marginLeft="12dp"-->
+            <!--android:hint="@string/type_your_message"-->
+            <!--android:singleLine="false"-->
+            <!--android:inputType="textMultiLine"-->
+            <!--android:textSize="18sp"-->
+            <!--android:textColorHint="#c4c0bd"-->
+            <!--android:textColor="@android:color/black"-->
+            <!--android:background="@null"/>-->
+            <!--</LinearLayout>-->
 
-        <!--</LinearLayout>-->
-
-        <!--<ImageButton-->
+            <!--<ImageButton-->
             <!--android:id="@+id/enter_chat1"-->
             <!--android:layout_width="50dp"-->
             <!--android:layout_height="50dp"-->
@@ -81,6 +92,8 @@
             <!--android:background="@drawable/input_circle_normal"-->
             <!--android:src="@drawable/input_send"/>-->
 
-    </LinearLayout>
+            <!--</LinearLayout>-->
+        </RelativeLayout>
+    </android.support.v4.widget.DrawerLayout>
 
 </RelativeLayout>

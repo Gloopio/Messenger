@@ -83,6 +83,10 @@ public class ChooseUserDialog {
             @Override
             public void onClick(View view) {
 
+                // TODo find userInfo of chosen user
+                UserInfo testUser = new UserInfo();
+                testUser.setUserName("testUser");
+                testUser.setPhone("9454857885878");
 
                 String memberId = newMember.getText().toString();
 
@@ -95,6 +99,7 @@ public class ChooseUserDialog {
 
                 Chat chat = new Chat();
                 chat.setUser1(userInfo);
+                chat.setUser2(testUser);
                 chat.setUser(group.getObjectId());
                 chat.save();
 

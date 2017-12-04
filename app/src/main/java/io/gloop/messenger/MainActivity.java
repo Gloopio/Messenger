@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
         final ListFragment frag1 = ListFragment.newInstance(VIEW_CHATS, userInfo, owner);
-        final ListFragment frag2 = ListFragment.newInstance(VIEW_CLOSED_TASKS, userInfo, owner);
+        final ContactsFragment frag2 = ContactsFragment.newInstance(VIEW_CLOSED_TASKS, userInfo, owner);
         adapter.addFragment(frag1, "Chats");
         adapter.addFragment(frag2, "Contacts");
         viewPager.setAdapter(adapter);

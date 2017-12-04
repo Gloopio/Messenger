@@ -1,7 +1,6 @@
 package io.gloop.messenger;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,19 +12,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import in.co.madhur.chatbubblesdemo.AndroidUtilities;
+import br.com.instachat.emojilibrary.model.layout.EmojiTextView;
+import io.gloop.GloopList;
 import io.gloop.messenger.model.ChatMessage;
 import io.gloop.messenger.model.Status;
 import io.gloop.messenger.model.UserType;
-import io.gloop.messenger.widgets.Emoji;
 
 public class ChatListAdapter extends BaseAdapter {
 
-    private ArrayList<ChatMessage> chatMessages;
+    private GloopList<ChatMessage> chatMessages;
     private Context context;
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("h:mm a", Locale.US);
 
-    public ChatListAdapter(ArrayList<ChatMessage> chatMessages, Context context) {
+    public ChatListAdapter(GloopList<ChatMessage> chatMessages, Context context) {
         this.chatMessages = chatMessages;
         this.context = context;
     }
@@ -59,7 +58,7 @@ public class ChatListAdapter extends BaseAdapter {
                 holder1 = new ViewHolder1();
 
 
-                holder1.messageTextView = (TextView) v.findViewById(R.id.textview_message);
+                holder1.messageTextView = (EmojiTextView) v.findViewById(R.id.textview_message);
                 holder1.timeTextView = (TextView) v.findViewById(R.id.textview_time);
 
                 v.setTag(holder1);
@@ -69,9 +68,12 @@ public class ChatListAdapter extends BaseAdapter {
 
             }
 
-            holder1.messageTextView.setText(Html.fromHtml(Emoji.replaceEmoji(message.getMessageText(),
-                    holder1.messageTextView.getPaint().getFontMetricsInt(), AndroidUtilities.dp(16))
-                    + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
+//            holder1.messageTextView.setText(Html.fromHtml(Emoji.replaceEmoji(message.getMessageText(),
+//                    holder1.messageTextView.getPaint().getFontMetricsInt(), AndroidUtilities.dp(16))
+//                    + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
+            holder1.messageTextView.setText(message.getMessageText());
+            holder1.messageTextView.setUseSystemDefault(Boolean.FALSE);
+
             holder1.timeTextView.setText(SIMPLE_DATE_FORMAT.format(message.getMessageTime()));
 
         } else if (message.getUserType() == UserType.OTHER) {
@@ -82,7 +84,7 @@ public class ChatListAdapter extends BaseAdapter {
                 holder2 = new ViewHolder2();
 
 
-                holder2.messageTextView = (TextView) v.findViewById(R.id.textview_message);
+                holder2.messageTextView = (EmojiTextView) v.findViewById(R.id.textview_message);
                 holder2.timeTextView = (TextView) v.findViewById(R.id.textview_time);
                 holder2.messageStatus = (ImageView) v.findViewById(R.id.user_reply_status);
                 v.setTag(holder2);
@@ -93,11 +95,15 @@ public class ChatListAdapter extends BaseAdapter {
 
             }
 
-            holder2.messageTextView.setText(Html.fromHtml(Emoji.replaceEmoji(message.getMessageText(),
-                    holder2.messageTextView.getPaint().getFontMetricsInt(), AndroidUtilities.dp(16))
-                    + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;" +
-                    "&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
+//            holder2.messageTextView.setText(Html.fromHtml(Emoji.replaceEmoji(message.getMessageText(),
+//                    holder2.messageTextView.getPaint().getFontMetricsInt(), AndroidUtilities.dp(16))
+//                    + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;" +
+//                    "&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
             //holder2.messageTextView.setText(message.getMessageText());
+            holder2.messageTextView.setText(message.getMessageText());
+            holder2.messageTextView.setUseSystemDefault(Boolean.FALSE);
+
+
             holder2.timeTextView.setText(SIMPLE_DATE_FORMAT.format(message.getMessageTime()));
 
             if (message.getMessageStatus() == Status.DELIVERED) {
@@ -126,7 +132,7 @@ public class ChatListAdapter extends BaseAdapter {
     }
 
     private class ViewHolder1 {
-        public TextView messageTextView;
+        public EmojiTextView messageTextView;
         public TextView timeTextView;
 
 
@@ -134,7 +140,7 @@ public class ChatListAdapter extends BaseAdapter {
 
     private class ViewHolder2 {
         public ImageView messageStatus;
-        public TextView messageTextView;
+        public EmojiTextView messageTextView;
         public TextView timeTextView;
 
     }

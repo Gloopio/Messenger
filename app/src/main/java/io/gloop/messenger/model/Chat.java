@@ -11,6 +11,8 @@ public class Chat extends GloopObject {
     private UserInfo user1;
     private UserInfo user2;
 
+    private long lastTimeAccessed;
+
     public UserInfo getUser1() {
         return user1;
     }

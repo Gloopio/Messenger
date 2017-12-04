@@ -29,48 +29,55 @@
                 android:layout_height="match_parent"
                 android:background="@color/colorPrimary"/>
 
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_user_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/user_with_background"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp">
+                    android:layout_height="60dp"
+                    android:paddingTop="15dp">
 
                     <TextView
                         android:id="@+id/board_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="15dp"
                         android:paddingLeft="15dp"
+                        android:gravity="center"
                         android:text="Task name"
                         android:textAppearance="?attr/textAppearanceListItem"
                         android:textSize="@dimen/text_size"/>
 
                     <!--<ImageView-->
-                        <!--android:id="@+id/task_done"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_alignParentRight="true"-->
-                        <!--android:layout_centerInParent="true"-->
-                        <!--android:paddingEnd="15dp"-->
-                        <!--android:src="@drawable/ic_done_white_24dp"-->
-                        <!--android:tag="notSelected"-->
-                        <!--android:tint="@color/Yellow"/>-->
+                    <!--android:id="@+id/task_done"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerInParent="true"-->
+                    <!--android:paddingEnd="15dp"-->
+                    <!--android:src="@drawable/ic_done_white_24dp"-->
+                    <!--android:tag="notSelected"-->
+                    <!--android:tint="@color/Yellow"/>-->
 
 
                 </RelativeLayout>
 
 
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="10dp">
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:paddingBottom="10dp">-->
 
-                </RelativeLayout>
+                <!--</RelativeLayout>-->
 
 
             </LinearLayout>

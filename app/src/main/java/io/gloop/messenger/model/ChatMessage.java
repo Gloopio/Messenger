@@ -1,21 +1,26 @@
 package io.gloop.messenger.model;
 
 import io.gloop.GloopObject;
+import io.gloop.annotations.Serializer;
+import io.gloop.messenger.serializers.StatusSerializer;
+import io.gloop.messenger.serializers.UserTypeSerializer;
 
 public class ChatMessage extends GloopObject {
 
-    private String ChatId;
+    private String chatId;
     private String messageText;
     private String author;
+    @Serializer(StatusSerializer.class)
     private Status messageStatus;
+    @Serializer(UserTypeSerializer.class)
     private UserType userType;
 
     public String getChatId() {
-        return ChatId;
+        return chatId;
     }
 
     public void setChatId(String chatId) {
-        ChatId = chatId;
+        this.chatId = chatId;
     }
 
     public long getMessageTime() {

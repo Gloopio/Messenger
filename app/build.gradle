@@ -15,7 +15,11 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '25.0.3'
+
+    defaultConfig {
+        multiDexEnabled true
+    }
 
     def versionPropsFile = file('version.properties')
     if (versionPropsFile.canRead()) {
@@ -82,42 +86,44 @@ repositories {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['gloopSDK-*.jar'])
+    compile fileTree(dir: 'libs', include: ['gloopSDK-*.jar'])
 
     annotationProcessor fileTree(dir: 'libs', include: ['gloopProcessor-*.jar'])
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.android.support:support-v4:25.4.0'
-    implementation 'com.android.support:recyclerview-v7:25.4.0'
-    implementation 'com.android.support:design:25.4.0'
-    implementation 'com.android.support:appcompat-v7:25.4.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.github.TR4Android:Swipeable-RecyclerView:0.2.0'
-    implementation 'com.github.paolorotolo:appintro:4.1.0'
+    compile 'com.android.support:support-v4:25.4.0'
+    compile 'com.android.support:recyclerview-v7:25.4.0'
+    compile 'com.android.support:design:25.4.0'
+    compile 'com.android.support:appcompat-v7:25.4.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.github.TR4Android:Swipeable-RecyclerView:0.2.0'
+    compile 'com.github.paolorotolo:appintro:4.1.0'
     testCompile 'junit:junit:4.12'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
-    implementation 'com.github.clans:fab:1.6.4'
+    compile 'com.github.clans:fab:1.6.4'
 
-    implementation 'com.android.support:cardview-v7:25.4.0'
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
-    implementation 'de.hdodenhof:circleimageview:1.3.0'
-    implementation 'net.rimoto:intlphoneinput:1.0.1'
+    compile 'com.android.support:cardview-v7:25.4.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'de.hdodenhof:circleimageview:1.3.0'
+    compile 'net.rimoto:intlphoneinput:1.0.1'
 
 
 //    compile 'com.google.android.gms:play-services-auth:11.4.2'
 //    compile 'com.google.android.gms:play-services-analytics:11.4.2'
 
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 //    compile 'com.facebook.android:facebook-login:[4,5)'
 //    compile('com.crashlytics.sdk.android:answers:1.4.1@aar') {
 //        transitive = true;
 //    }
 
-    implementation 'br.com.instachat:emoji-library:1.0.8'
+//    compile "com.android.support:support-emoji:27.0.2"
+    compile 'br.com.instachat:emoji-library:1.0.8'
+//    compile 'com.android.support:multidex:1.0.2'
 
 
 

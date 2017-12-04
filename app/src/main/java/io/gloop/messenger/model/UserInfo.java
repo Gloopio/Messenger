@@ -16,6 +16,7 @@ public class UserInfo extends GloopObject {
     private String phone;
     private String imageURL;
     private String userName;
+    private long lastTimeOnline;
     private List<String> favories = new ArrayList<>();
 
     public UserInfo() {

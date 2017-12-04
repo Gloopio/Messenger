@@ -35,7 +35,7 @@ import io.gloop.messenger.model.Chat;
 import io.gloop.messenger.model.UserInfo;
 import io.gloop.permissions.GloopUser;
 
-public class ListFragment extends Fragment {
+public class ContactsFragment extends Fragment {
 
     private final static String SELECTED = "selected";
     private final static String NOT_SELECTED = "notSelected";
@@ -53,8 +53,8 @@ public class ListFragment extends Fragment {
     private int operation;
     private UserInfo userInfo;
 
-    public static ListFragment newInstance(int operation, UserInfo userinfo, GloopUser owner) {
-        ListFragment f = new ListFragment();
+    public static ContactsFragment newInstance(int operation, UserInfo userinfo, GloopUser owner) {
+        ContactsFragment f = new ContactsFragment();
         Bundle args = new Bundle();
         args.putInt("operation", operation);
         args.putSerializable("userinfo", userinfo);
@@ -63,6 +63,55 @@ public class ListFragment extends Fragment {
         return f;
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+// TODO requires permission on first start
+//        ContactUtil.getPhoneNumbers(getContext());
+
+//        Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+//        startActivityForResult(contactPickerIntent,1);
+    }
+
+
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        switch (requestCode){
+//            case 1 :
+//                if (resultCode == Activity.RESULT_OK) {
+//                    Uri contactData = data.getData();
+//
+//                    Cursor cur =  getActivity().getContentResolver().query(contactData, null, null, null, null);
+//                    if (cur.getCount() > 0) {// thats mean some resutl has been found
+//                        if(cur.moveToNext()) {
+//                            String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+//                            String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+//                            Log.e("Names", name);
+//
+//                            if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0)
+//                            {
+//
+//                                Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ id,null, null);
+//                                while (phones.moveToNext()) {
+//                                    String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+//                                    Log.e("Number", phoneNumber);
+//                                }
+//                                phones.close();
+//                            }
+//
+//                        }
+//                    }
+//                    cur.close();
+//                }
+//                break;
+//        }
+//
+//    }
 
     @Nullable
     @Override
@@ -161,7 +210,7 @@ public class ListFragment extends Fragment {
         protected GloopList<Chat> doInBackground(Void... urls) {
             GloopList<Chat> all = null;
 //            if (operation == VIEW_CHATS)
-                all = Gloop.all(Chat.class).where().equalsTo("user1", userInfo).all();
+                all = Gloop.all(Chat.class);
 //            else
 //                all = Gloop.all(Task.class).where().equalsTo("done", true).all();
 
@@ -218,7 +267,7 @@ public class ListFragment extends Fragment {
 
             // TODO get other user then itself
 //            holder.mContentView.setText(task.getUser2().getEmail());
-            holder.mContentView.setText(chat.getUser2().getUserName());
+            holder.mContentView.setText("test");
 //            final int color = task.getColor();
 //            holder.mImage.setBackgroundColor(color);
 
