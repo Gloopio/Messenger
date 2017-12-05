@@ -1,6 +1,6 @@
 package io.gloop.messenger;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,9 +30,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.gloop.Gloop;
 import io.gloop.GloopList;
 import io.gloop.exceptions.GloopLoadException;
-import io.gloop.messenger.dialogs.TaskInfoDialog;
 import io.gloop.messenger.model.Chat;
 import io.gloop.messenger.model.UserInfo;
+import io.gloop.messenger.utils.ContactUtil;
+import io.gloop.messenger.utils.Store;
+import io.gloop.permissions.GloopGroup;
 import io.gloop.permissions.GloopUser;
 
 public class ContactsFragment extends Fragment {
@@ -40,26 +42,18 @@ public class ContactsFragment extends Fragment {
     private final static String SELECTED = "selected";
     private final static String NOT_SELECTED = "notSelected";
 
-    private Context context;
-    private GloopUser owner;
-    private TaskAdapter taskAdapter;
+    private UserInfoAdapter userInfoAdapter;
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    public static final int VIEW_CHATS = 0;
-    public static final int VIEW_CLOSED_TASKS = 1;
-
-    private int operation;
-    private UserInfo userInfo;
-
     public static ContactsFragment newInstance(int operation, UserInfo userinfo, GloopUser owner) {
         ContactsFragment f = new ContactsFragment();
-        Bundle args = new Bundle();
-        args.putInt("operation", operation);
-        args.putSerializable("userinfo", userinfo);
-        args.putSerializable("owner", owner);
-        f.setArguments(args);
+//        Bundle args = new Bundle();
+//        args.putInt("operation", operation);
+//        args.putSerializable("userinfo", userinfo);
+//        args.putSerializable("owner", owner);
+//        f.setArguments(args);
         return f;
     }
 
@@ -67,62 +61,13 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-// TODO requires permission on first start
-//        ContactUtil.getPhoneNumbers(getContext());
-
-//        Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-//        startActivityForResult(contactPickerIntent,1);
     }
-
-
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        switch (requestCode){
-//            case 1 :
-//                if (resultCode == Activity.RESULT_OK) {
-//                    Uri contactData = data.getData();
-//
-//                    Cursor cur =  getActivity().getContentResolver().query(contactData, null, null, null, null);
-//                    if (cur.getCount() > 0) {// thats mean some resutl has been found
-//                        if(cur.moveToNext()) {
-//                            String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-//                            String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-//                            Log.e("Names", name);
-//
-//                            if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0)
-//                            {
-//
-//                                Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ id,null, null);
-//                                while (phones.moveToNext()) {
-//                                    String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-//                                    Log.e("Number", phoneNumber);
-//                                }
-//                                phones.close();
-//                            }
-//
-//                        }
-//                    }
-//                    cur.close();
-//                }
-//                break;
-//        }
-//
-//    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final RelativeLayout rv = (RelativeLayout) inflater.inflate(R.layout.fragment_list, container, false);
         setHasOptionsMenu(true);
-
-        Bundle args = getArguments();
-        operation = args.getInt("operation", 0);
-        userInfo = (UserInfo) args.getSerializable("userinfo");
-        this.owner = (GloopUser) args.getSerializable("owner");
 
         recyclerView = (RecyclerView) rv.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
@@ -138,8 +83,6 @@ public class ContactsFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-
-        this.context = getContext();
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rv.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.color1, R.color.color2, R.color.color3, R.color.color4, R.color.color5, R.color.color6);
@@ -176,7 +119,7 @@ public class ContactsFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                taskAdapter.filter(s);
+                userInfoAdapter.filter(s);
                 return false;
             }
         });
@@ -193,7 +136,7 @@ public class ContactsFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private class LoadTasksTask extends AsyncTask<Void, Integer, GloopList<Chat>> {
+    private class LoadTasksTask extends AsyncTask<Void, Integer, GloopList<UserInfo>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -207,24 +150,25 @@ public class ContactsFragment extends Fragment {
         }
 
         @Override
-        protected GloopList<Chat> doInBackground(Void... urls) {
-            GloopList<Chat> all = null;
-//            if (operation == VIEW_CHATS)
-                all = Gloop.all(Chat.class);
-//            else
-//                all = Gloop.all(Task.class).where().equalsTo("done", true).all();
+        protected GloopList<UserInfo> doInBackground(Void... urls) {
+            Activity activity = getActivity();
+//            while (activity == null)
+//                activity = getActivity();
 
-            all.load();
-            return all;
+            GloopList<UserInfo> userInfos = ContactUtil.syncContacts(activity);
+
+            if (userInfos != null)
+                userInfos.load();
+            return userInfos;
         }
 
 
         @Override
-        protected void onPostExecute(GloopList<Chat> tasks) {
+        protected void onPostExecute(GloopList<UserInfo> tasks) {
             super.onPostExecute(tasks);
             try {
-                taskAdapter = new TaskAdapter(tasks);
-                recyclerView.setAdapter(taskAdapter);
+                userInfoAdapter = new UserInfoAdapter(tasks);
+                recyclerView.setAdapter(userInfoAdapter);
                 if (mSwipeRefreshLayout != null) {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
@@ -239,17 +183,17 @@ public class ContactsFragment extends Fragment {
         new LoadTasksTask().execute();
     }
 
-    public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.BoardViewHolder> {
+    public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.BoardViewHolder> {
 
-        private ArrayList<Chat> list;
-        private final GloopList<Chat> originalList;
+        private ArrayList<UserInfo> list;
+        private final GloopList<UserInfo> originalList;
 
-        TaskAdapter(final GloopList<Chat> tasks) {
+        UserInfoAdapter(final GloopList<UserInfo> tasks) {
             originalList = tasks;
-            list = (ArrayList<Chat>) tasks.getLocalCopy();
-            Collections.sort(list, Collections.reverseOrder(new Comparator<Chat>() {
+            list = (ArrayList<UserInfo>) tasks.getLocalCopy();
+            Collections.sort(list, Collections.reverseOrder(new Comparator<UserInfo>() {
                 @Override
-                public int compare(Chat left, Chat right) {
+                public int compare(UserInfo left, UserInfo right) {
                     return Long.compare(left.getTimestamp(), right.getTimestamp());
                 }
             }));
@@ -257,72 +201,25 @@ public class ContactsFragment extends Fragment {
 
         @Override
         public BoardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_contact, parent, false);
             return new BoardViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(final BoardViewHolder holder, int position) {
-            final Chat chat = list.get(position);
+            final UserInfo userInfo = list.get(position);
 
-            // TODO get other user then itself
-//            holder.mContentView.setText(task.getUser2().getEmail());
-            holder.mContentView.setText("test");
+            holder.mContentView.setText(userInfo.getUserName());
+            holder.mPhoneNumber.setText(userInfo.getPhone());
 //            final int color = task.getColor();
 //            holder.mImage.setBackgroundColor(color);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, ChatActivity.class);
-                    intent.putExtra("chat", chat);
-//                    intent.putExtra(TaskDetailFragment.ARG_BOARD, task);
-//                    intent.putExtra(TaskDetailFragment.ARG_USER_INFO, userInfo);
-                    context.startActivity(intent);
+                    openChat(Store.getOwnerUserInfo(), userInfo);
                 }
             });
-
-            holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-
-                    int mWidth = getResources().getDisplayMetrics().widthPixels;
-                    int mHeight = getResources().getDisplayMetrics().heightPixels;
-
-
-                    new TaskInfoDialog(context, owner, chat, userInfo, mHeight / 2, mWidth / 2);
-                    setupRecyclerView();
-                    return true;
-                }
-            });
-
-//            if (task.isDone()) {
-//                holder.mTaskDone.setColorFilter(getContext().getResources().getColor(R.color.Yellow));
-//                holder.mTaskDone.setTag(SELECTED);
-//            } else {
-//                holder.mTaskDone.setColorFilter(getContext().getResources().getColor(R.color.Gray));
-//                holder.mTaskDone.setTag(NOT_SELECTED);
-//            }
-//            holder.mTaskDone.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (holder.mTaskDone.getTag().equals(NOT_SELECTED)) {
-//                        holder.mTaskDone.setColorFilter(getContext().getResources().getColor(R.color.Yellow));
-//                        holder.mTaskDone.setTag(SELECTED);
-//                        task.setDone(true);
-//                    } else {
-//                        holder.mTaskDone.setColorFilter(getContext().getResources().getColor(R.color.Gray));
-//                        holder.mTaskDone.setTag(NOT_SELECTED);
-//                        task.setDone(false);
-//                    }
-//                    task.save();
-//                    setupRecyclerView();
-//                    if (userInfo != null)
-//                        userInfo.saveInBackground();
-//                }
-//            });
-
         }
 
         @Override
@@ -340,11 +237,11 @@ public class ContactsFragment extends Fragment {
 
         void filter(String s) {
             if (s.equals("")) {
-                list = (ArrayList<Chat>) originalList.getLocalCopy();
+                list = (ArrayList<UserInfo>) originalList.getLocalCopy();
             } else {
                 String search = s.toLowerCase();
-                for (Chat task : originalList) {
-                    if (!task.getUser2().getUserName().toLowerCase().startsWith(search))   // TODO get other user then itself
+                for (UserInfo task : originalList) {
+                    if (!task.getUserName().toLowerCase().startsWith(search))
                         list.remove(task);
                 }
             }
@@ -355,6 +252,7 @@ public class ContactsFragment extends Fragment {
         class BoardViewHolder extends RecyclerView.ViewHolder {
             final View mView;
             final TextView mContentView;
+            final TextView mPhoneNumber;
             final ImageView mImage;
 
             final List<CircleImageView> memberImages = new ArrayList<>();
@@ -364,6 +262,7 @@ public class ContactsFragment extends Fragment {
                 super(view);
                 mView = view.findViewById(R.id.card_view);
                 mContentView = (TextView) view.findViewById(R.id.board_name);
+                mPhoneNumber = (TextView) view.findViewById(R.id.phone_number);
                 mImage = (ImageView) view.findViewById(R.id.avatar);
 
                 memberImages.add((CircleImageView) view.findViewById(R.id.user_image1));
@@ -376,6 +275,43 @@ public class ContactsFragment extends Fragment {
             public String toString() {
                 return super.toString() + " '" + mContentView.getText() + "'";
             }
+        }
+    }
+
+    private void openChat(UserInfo ownerUserInfo, UserInfo userInfo) {
+
+        // check if there exists already a chat of these users.
+
+        Chat existingChat = Gloop.all(Chat.class).where()
+                .equalsTo("user1", ownerUserInfo).and().equalsTo("user1", userInfo)
+                .or()
+                .equalsTo("user1", userInfo).and().equalsTo("user1", ownerUserInfo)
+                .first();
+
+        if (existingChat != null) {
+            Intent intent = new Intent(getContext(), ChatActivity.class);
+            intent.putExtra("chat", existingChat);
+            getContext().startActivity(intent);
+        } else {
+            // create new chat
+
+            GloopGroup group = new GloopGroup();
+            group.addMember(ownerUserInfo.getPhone());
+            group.addMember(userInfo.getPhone());
+            group.save();
+
+            // add permissions to group
+
+            Chat chat = new Chat();
+            chat.setUser1(ownerUserInfo);
+            chat.setUser2(userInfo);
+            chat.setUser(group.getObjectId());
+            chat.save();
+
+            Intent intent = new Intent(getContext(), ChatActivity.class);
+            intent.putExtra("chat", chat);
+            getContext().startActivity(intent);
+
         }
     }
 }

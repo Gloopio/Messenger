@@ -1,9 +1,7 @@
 package io.gloop.messenger.intro;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
@@ -14,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
-import com.github.paolorotolo.appintro.ISlideBackgroundColorHolder;
 
 import io.gloop.messenger.R;
 import io.gloop.messenger.model.UserInfo;
@@ -56,7 +52,7 @@ public class Register2Fragment extends Fragment {
                 if (!input.equals("")) {
                     userInfo.setUserName(input);
 
-                    Fragment newFragment = new Register3Fragment();
+                    Fragment newFragment = new Register4Fragment();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("userInfo", userInfo);
                     newFragment.setArguments(bundle);

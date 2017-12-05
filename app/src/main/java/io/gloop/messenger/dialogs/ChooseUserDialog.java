@@ -1,9 +1,7 @@
 package io.gloop.messenger.dialogs;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -15,8 +13,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.ContactsContract;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -25,9 +21,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,9 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.gloop.GloopLogger;
-import io.gloop.messenger.ChatActivity;
 import io.gloop.messenger.R;
-import io.gloop.messenger.model.Chat;
 import io.gloop.messenger.model.UserInfo;
 import io.gloop.permissions.GloopGroup;
 
@@ -56,7 +47,7 @@ public class ChooseUserDialog {
         final View dialogView = View.inflate(context, R.layout.dialog_choose_user, null);
 
         final Dialog dialog = new Dialog(context, R.style.MyAlertDialogStyle);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(dialogView);
 
         ImageView imageView = (ImageView) dialog.findViewById(R.id.closeDialogImg);
@@ -67,62 +58,62 @@ public class ChooseUserDialog {
             }
         });
 
-        final AutoCompleteTextView newMember = (AutoCompleteTextView) dialog.findViewById(R.id.member_new);
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_CONTACTS}, 1);
-        } else {
-            ContentResolver content = context.getContentResolver();
-            Cursor cursor = content.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, null, null, null);
-            final ContactListAdapter adapter = new ContactListAdapter(context, cursor, true);
-            newMember.setThreshold(0);
-            newMember.setAdapter(adapter);
-        }
+//        final AutoCompleteTextView newMember = (AutoCompleteTextView) dialog.findViewById(R.id.member_new);
+//        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+//        } else {
+//            ContentResolver content = context.getContentResolver();
+//            Cursor cursor = content.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, null, null, null);
+//            final ContactListAdapter adapter = new ContactListAdapter(context, cursor, true);
+//            newMember.setThreshold(0);
+//            newMember.setAdapter(adapter);
+//        }
 
-        Button chooseUserButton = (Button) dialog.findViewById(R.id.user_choose);
-        chooseUserButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                // TODo find userInfo of chosen user
-                UserInfo testUser = new UserInfo();
-                testUser.setUserName("testUser");
-                testUser.setPhone("9454857885878");
-
-                String memberId = newMember.getText().toString();
-
-                GloopGroup group = new GloopGroup();
-                group.addMember(memberId);
-                group.addMember(userInfo.getPhone());
-                group.save();
-
-                // add permissions to group
-
-                Chat chat = new Chat();
-                chat.setUser1(userInfo);
-                chat.setUser2(testUser);
-                chat.setUser(group.getObjectId());
-                chat.save();
-
-                // TODO load UserInfo of choosen user and add;
-//                chat.setUser2(new UserInfo());
-
-//                if (!memberId.equals("")) {
-//                    group.addMember(memberId);
-//                    group.save();
-//                    adapter.notifyDataSetChanged();
-//                    newMember.setText("");
-//                }
-
-
-                Context context = view.getContext();
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra("chat", chat);
-//                    intent.putExtra(TaskDetailFragment.ARG_BOARD, task);
-//                    intent.putExtra(TaskDetailFragment.ARG_USER_INFO, userInfo);
-                context.startActivity(intent);
-                revealShow(dialogView, false, dialog);
-            }
-        });
+//        Button chooseUserButton = (Button) dialog.findViewById(R.id.user_choose);
+//        chooseUserButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                // TODo find userInfo of chosen user
+//                UserInfo testUser = new UserInfo();
+//                testUser.setUserName("testUser");
+//                testUser.setPhone("9454857885878");
+//
+//                String memberId = newMember.getText().toString();
+//
+//                GloopGroup group = new GloopGroup();
+//                group.addMember(memberId);
+//                group.addMember(userInfo.getPhone());
+//                group.save();
+//
+//                // add permissions to group
+//
+//                Chat chat = new Chat();
+//                chat.setUser1(userInfo);
+//                chat.setUser2(testUser);
+//                chat.setUser(group.getObjectId());
+//                chat.save();
+//
+//                // TODO load UserInfo of choosen user and add;
+////                chat.setUser2(new UserInfo());
+//
+////                if (!memberId.equals("")) {
+////                    group.addMember(memberId);
+////                    group.save();
+////                    adapter.notifyDataSetChanged();
+////                    newMember.setText("");
+////                }
+//
+//
+//                Context context = view.getContext();
+//                Intent intent = new Intent(context, ChatActivity.class);
+//                intent.putExtra("chat", chat);
+////                    intent.putExtra(TaskDetailFragment.ARG_BOARD, task);
+////                    intent.putExtra(TaskDetailFragment.ARG_USER_INFO, userInfo);
+//                context.startActivity(intent);
+//                revealShow(dialogView, false, dialog);
+//            }
+//        });
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override

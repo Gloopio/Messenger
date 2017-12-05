@@ -34,6 +34,7 @@ import io.gloop.messenger.dialogs.ChooseUserDialog;
 import io.gloop.messenger.dialogs.DayNightSettingsDialog;
 import io.gloop.messenger.model.UserInfo;
 import io.gloop.messenger.utils.SharedPreferencesStore;
+import io.gloop.messenger.utils.Store;
 import io.gloop.permissions.GloopUser;
 
 import static io.gloop.messenger.ListFragment.VIEW_CHATS;
@@ -44,13 +45,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout mDrawerLayout;
 
-//    private CircleImageView userImage;
+    //    private CircleImageView userImage;
 //    private TextView username;
     private TextView navHeaderUsername;
     private ViewPager viewPager;
     private CircleImageView navHeaderUserImage;
     private FloatingActionButton floatingActionButton;
-//    private LinearLayout header;
+    //    private LinearLayout header;
     private LinearLayout navHeader;
     private AppBarLayout appBar;
 
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .where()
                 .equalsTo("phone", owner.getName())
                 .first();
+        Store.setOwnerUserInfo(userInfo);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
@@ -202,8 +204,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onPageSelected(int position) {
-                frag1.setupRecyclerView();
-                frag2.setupRecyclerView();
+                if (position == 0)
+                    frag1.setupRecyclerView();
+                else
+                    frag2.setupRecyclerView();
             }
 
             @Override

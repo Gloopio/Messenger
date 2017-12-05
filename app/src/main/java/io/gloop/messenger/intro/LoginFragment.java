@@ -22,6 +22,7 @@ import net.rimoto.intlphoneinput.IntlPhoneInput;
 import io.gloop.Gloop;
 import io.gloop.messenger.MainActivity;
 import io.gloop.messenger.R;
+import io.gloop.messenger.utils.SharedPreferencesStore;
 
 /**
  * Created by Alex Untertrifaller on 30.11.17.
@@ -53,6 +54,8 @@ public class LoginFragment extends Fragment implements ISlideBackgroundColorHold
                     myInternationalNumber = phoneInputView.getNumber();
 
                     if (Gloop.login(myInternationalNumber, password.getText().toString()) ) {
+
+                        SharedPreferencesStore.setUser(myInternationalNumber, password.getText().toString());
 
                         Intent intent = new Intent(getActivity(), MainActivity.class);
                         startActivity(intent);
