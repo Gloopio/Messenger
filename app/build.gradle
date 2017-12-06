@@ -72,10 +72,10 @@ android {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
     }
 
-    sourceSets.main {
-        jniLibs.srcDir 'libs'
-        jni.srcDirs = [] //disable automatic ndk-build call
-    }
+//    sourceSets.main {
+//        jniLibs.srcDir 'libs'
+//        jni.srcDirs = [] //disable automatic ndk-build call
+//    }
 }
 
 repositories {
@@ -101,7 +101,7 @@ dependencies {
     compile 'com.github.TR4Android:Swipeable-RecyclerView:0.2.0'
     compile 'com.github.paolorotolo:appintro:4.1.0'
     testCompile 'junit:junit:4.12'
-    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true
     }
     compile 'com.github.clans:fab:1.6.4'

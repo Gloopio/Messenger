@@ -30,33 +30,25 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.gloop.Gloop;
 import io.gloop.GloopList;
 import io.gloop.exceptions.GloopLoadException;
-import io.gloop.messenger.dialogs.TaskInfoDialog;
+import io.gloop.messenger.dialogs.ChatInfoDialog;
 import io.gloop.messenger.model.Chat;
 import io.gloop.messenger.model.UserInfo;
 import io.gloop.permissions.GloopUser;
 
 public class ListFragment extends Fragment {
 
-    private final static String SELECTED = "selected";
-    private final static String NOT_SELECTED = "notSelected";
-
     private Context context;
     private GloopUser owner;
-    private TaskAdapter taskAdapter;
+    private ChatAdapter chatAdapter;
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    public static final int VIEW_CHATS = 0;
-    public static final int VIEW_CLOSED_TASKS = 1;
-
-    private int operation;
     private UserInfo userInfo;
 
-    public static ListFragment newInstance(int operation, UserInfo userinfo, GloopUser owner) {
+    public static ListFragment newInstance(UserInfo userinfo, GloopUser owner) {
         ListFragment f = new ListFragment();
         Bundle args = new Bundle();
-        args.putInt("operation", operation);
         args.putSerializable("userinfo", userinfo);
         args.putSerializable("owner", owner);
         f.setArguments(args);
@@ -71,8 +63,7 @@ public class ListFragment extends Fragment {
         setHasOptionsMenu(true);
 
         Bundle args = getArguments();
-        operation = args.getInt("operation", 0);
-        userInfo = (UserInfo) args.getSerializable("userinfo");
+        this.userInfo = (UserInfo) args.getSerializable("userinfo");
         this.owner = (GloopUser) args.getSerializable("owner");
 
         recyclerView = (RecyclerView) rv.findViewById(R.id.recyclerview);
@@ -127,7 +118,7 @@ public class ListFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                taskAdapter.filter(s);
+                chatAdapter.filter(s);
                 return false;
             }
         });
@@ -159,11 +150,12 @@ public class ListFragment extends Fragment {
 
         @Override
         protected GloopList<Chat> doInBackground(Void... urls) {
-            GloopList<Chat> all = null;
-//            if (operation == VIEW_CHATS)
-                all = Gloop.all(Chat.class).where().equalsTo("user1", userInfo).all();
-//            else
-//                all = Gloop.all(Task.class).where().equalsTo("done", true).all();
+            GloopList<Chat> all = Gloop.all(Chat.class)
+                    .where()
+                    .equalsTo("user1", userInfo)
+                    .or()
+                    .equalsTo("user2", userInfo)
+                    .all();
 
             all.load();
             return all;
@@ -174,8 +166,8 @@ public class ListFragment extends Fragment {
         protected void onPostExecute(GloopList<Chat> tasks) {
             super.onPostExecute(tasks);
             try {
-                taskAdapter = new TaskAdapter(tasks);
-                recyclerView.setAdapter(taskAdapter);
+                chatAdapter = new ChatAdapter(tasks);
+                recyclerView.setAdapter(chatAdapter);
                 if (mSwipeRefreshLayout != null) {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
@@ -190,12 +182,12 @@ public class ListFragment extends Fragment {
         new LoadTasksTask().execute();
     }
 
-    public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.BoardViewHolder> {
+    public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BoardViewHolder> {
 
         private ArrayList<Chat> list;
         private final GloopList<Chat> originalList;
 
-        TaskAdapter(final GloopList<Chat> tasks) {
+        ChatAdapter(final GloopList<Chat> tasks) {
             originalList = tasks;
             list = (ArrayList<Chat>) tasks.getLocalCopy();
             Collections.sort(list, Collections.reverseOrder(new Comparator<Chat>() {
@@ -216,9 +208,11 @@ public class ListFragment extends Fragment {
         public void onBindViewHolder(final BoardViewHolder holder, int position) {
             final Chat chat = list.get(position);
 
-            // TODO get other user then itself
-//            holder.mContentView.setText(task.getUser2().getEmail());
-            holder.mContentView.setText(chat.getUser2().getUserName());
+            if (userInfo.getPhone().equals(chat.getUser1().getPhone()))
+                holder.mContentView.setText(chat.getUser2().getUserName());
+            else
+                holder.mContentView.setText(chat.getUser1().getUserName());
+
 //            final int color = task.getColor();
 //            holder.mImage.setBackgroundColor(color);
 
@@ -227,10 +221,10 @@ public class ListFragment extends Fragment {
                 public void onClick(final View view) {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ChatActivity.class);
-                    intent.putExtra("chat", chat);
-//                    intent.putExtra(TaskDetailFragment.ARG_BOARD, task);
-//                    intent.putExtra(TaskDetailFragment.ARG_USER_INFO, userInfo);
+                    intent.putExtra(ChatActivity.CHAT, chat);
+                    intent.putExtra(ChatActivity.USER_INFO, userInfo);
                     context.startActivity(intent);
+//                    progress.dismiss();
                 }
             });
 
@@ -242,38 +236,11 @@ public class ListFragment extends Fragment {
                     int mHeight = getResources().getDisplayMetrics().heightPixels;
 
 
-                    new TaskInfoDialog(context, owner, chat, userInfo, mHeight / 2, mWidth / 2);
+                    new ChatInfoDialog(context, owner, chat, userInfo, mHeight / 2, mWidth / 2);
                     setupRecyclerView();
                     return true;
                 }
             });
-
-//            if (task.isDone()) {
-//                holder.mTaskDone.setColorFilter(getContext().getResources().getColor(R.color.Yellow));
-//                holder.mTaskDone.setTag(SELECTED);
-//            } else {
-//                holder.mTaskDone.setColorFilter(getContext().getResources().getColor(R.color.Gray));
-//                holder.mTaskDone.setTag(NOT_SELECTED);
-//            }
-//            holder.mTaskDone.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (holder.mTaskDone.getTag().equals(NOT_SELECTED)) {
-//                        holder.mTaskDone.setColorFilter(getContext().getResources().getColor(R.color.Yellow));
-//                        holder.mTaskDone.setTag(SELECTED);
-//                        task.setDone(true);
-//                    } else {
-//                        holder.mTaskDone.setColorFilter(getContext().getResources().getColor(R.color.Gray));
-//                        holder.mTaskDone.setTag(NOT_SELECTED);
-//                        task.setDone(false);
-//                    }
-//                    task.save();
-//                    setupRecyclerView();
-//                    if (userInfo != null)
-//                        userInfo.saveInBackground();
-//                }
-//            });
-
         }
 
         @Override

@@ -9,26 +9,34 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import br.com.instachat.emojilibrary.model.layout.EmojiTextView;
 import io.gloop.GloopList;
+import io.gloop.GloopOnChangeListener;
 import io.gloop.messenger.model.ChatMessage;
 import io.gloop.messenger.model.Status;
-import io.gloop.messenger.model.UserType;
+import io.gloop.messenger.model.UserInfo;
 
 public class ChatListAdapter extends BaseAdapter {
 
     private GloopList<ChatMessage> chatMessages;
     private Context context;
-    public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("h:mm a", Locale.US);
+    private UserInfo ownerUserInfo;
+    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("h:mm a", Locale.US);
 
-    public ChatListAdapter(GloopList<ChatMessage> chatMessages, Context context) {
+    ChatListAdapter(GloopList<ChatMessage> chatMessages, Context context, UserInfo ownerUserInfo) {
         this.chatMessages = chatMessages;
         this.context = context;
-    }
+        this.ownerUserInfo = ownerUserInfo;
 
+        this.chatMessages.addOnChangeListener(new GloopOnChangeListener() {
+            @Override
+            public void onChange() {
+                notifyDataSetChanged();
+            }
+        });
+    }
 
     @Override
     public int getCount() {
@@ -47,12 +55,12 @@ public class ChatListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v = null;
+        View v;
         ChatMessage message = chatMessages.get(position);
         ViewHolder1 holder1;
         ViewHolder2 holder2;
 
-        if (message.getUserType() == UserType.SELF) {
+        if (!message.getAuthor().equals(ownerUserInfo.getPhone())) {
             if (convertView == null) {
                 v = LayoutInflater.from(context).inflate(R.layout.chat_user1_item, null, false);
                 holder1 = new ViewHolder1();
@@ -68,15 +76,12 @@ public class ChatListAdapter extends BaseAdapter {
 
             }
 
-//            holder1.messageTextView.setText(Html.fromHtml(Emoji.replaceEmoji(message.getMessageText(),
-//                    holder1.messageTextView.getPaint().getFontMetricsInt(), AndroidUtilities.dp(16))
-//                    + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
             holder1.messageTextView.setText(message.getMessageText());
             holder1.messageTextView.setUseSystemDefault(Boolean.FALSE);
 
             holder1.timeTextView.setText(SIMPLE_DATE_FORMAT.format(message.getMessageTime()));
 
-        } else if (message.getUserType() == UserType.OTHER) {
+        } else {
 
             if (convertView == null) {
                 v = LayoutInflater.from(context).inflate(R.layout.chat_user2_item, null, false);
@@ -95,11 +100,6 @@ public class ChatListAdapter extends BaseAdapter {
 
             }
 
-//            holder2.messageTextView.setText(Html.fromHtml(Emoji.replaceEmoji(message.getMessageText(),
-//                    holder2.messageTextView.getPaint().getFontMetricsInt(), AndroidUtilities.dp(16))
-//                    + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;" +
-//                    "&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
-            //holder2.messageTextView.setText(message.getMessageText());
             holder2.messageTextView.setText(message.getMessageText());
             holder2.messageTextView.setUseSystemDefault(Boolean.FALSE);
 
@@ -112,10 +112,7 @@ public class ChatListAdapter extends BaseAdapter {
                 holder2.messageStatus.setImageDrawable(context.getResources().getDrawable(R.drawable.message_got_receipt_from_server));
 
             }
-
-
         }
-
 
         return v;
     }
@@ -128,20 +125,23 @@ public class ChatListAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         ChatMessage message = chatMessages.get(position);
-        return message.getUserType().ordinal();
+        if (!message.getAuthor().equals(ownerUserInfo.getPhone()))
+            return 1;
+        else
+            return 0;
     }
 
     private class ViewHolder1 {
-        public EmojiTextView messageTextView;
-        public TextView timeTextView;
+        EmojiTextView messageTextView;
+        TextView timeTextView;
 
 
     }
 
     private class ViewHolder2 {
-        public ImageView messageStatus;
-        public EmojiTextView messageTextView;
-        public TextView timeTextView;
+        ImageView messageStatus;
+        EmojiTextView messageTextView;
+        TextView timeTextView;
 
     }
 }

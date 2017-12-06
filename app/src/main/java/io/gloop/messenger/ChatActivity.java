@@ -1,40 +1,50 @@
 package io.gloop.messenger;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ListView;
 
 import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import br.com.instachat.emojilibrary.controller.WhatsAppPanel;
 import br.com.instachat.emojilibrary.model.layout.EmojiCompatActivity;
 import br.com.instachat.emojilibrary.model.layout.WhatsAppPanelEventListener;
-import in.co.madhur.chatbubblesdemo.AndroidUtilities;
 import io.gloop.Gloop;
 import io.gloop.GloopList;
 import io.gloop.messenger.model.Chat;
 import io.gloop.messenger.model.ChatMessage;
 import io.gloop.messenger.model.Status;
-import io.gloop.messenger.model.UserType;
+import io.gloop.messenger.model.UserInfo;
 
 
 public class ChatActivity extends EmojiCompatActivity implements NotificationCenter.NotificationCenterDelegate, WhatsAppPanelEventListener {
+
+    public static final String CHAT = "chat";
+    public static final String USER_INFO = "userInfo";
 
     private ListView chatListView;
     private GloopList<ChatMessage> chatMessages;
     private ChatListAdapter listAdapter;
 
+    private ProgressDialog progress;
+
+    private UserInfo userInfo;
     private Chat chat;
 
     private WhatsAppPanel mBottomPanel;
 
+
     @Override
     public void onSendClicked() {
-        sendMessage(mBottomPanel.getText(), UserType.OTHER);
+        sendMessage(mBottomPanel.getText(), userInfo.getPhone());
         mBottomPanel.setText("");
     }
 
@@ -45,67 +55,83 @@ public class ChatActivity extends EmojiCompatActivity implements NotificationCen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AndroidUtilities.statusBarHeight = getStatusBarHeight();
-
         getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.splashscreen_background));
 
-        chat = (Chat) getIntent().getSerializableExtra("chat");
-
-        chatMessages = Gloop.all(ChatMessage.class).where().equalsTo("chatId", chat.getObjectId()).all().sort("timestamp");
+        chat = (Chat) getIntent().getSerializableExtra(ChatActivity.CHAT);
+        userInfo = (UserInfo) getIntent().getSerializableExtra(ChatActivity.USER_INFO);
 
         chatListView = (ListView) findViewById(R.id.chat_list_view);
-
-        listAdapter = new ChatListAdapter(chatMessages, this);
-
-        chatListView.setAdapter(listAdapter);
 
         NotificationCenter.getInstance().addObserver(this, NotificationCenter.emojiDidLoaded);
 
         mBottomPanel = new WhatsAppPanel(this, this, R.color.colorPrimary);
+
+       new LoadTask().execute();
+
     }
 
-    private void sendMessage(final String messageText, final UserType userType) {
+    private class LoadTask extends AsyncTask<Void, Integer, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress = new ProgressDialog(ChatActivity.this);
+            progress.setTitle(getString(R.string.loading));
+            progress.setMessage(getString(R.string.wait_while_loading_lines));
+            progress.setCancelable(false);
+            progress.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... urls) {
+            chatMessages = Gloop.all(ChatMessage.class).where().equalsTo("chatId", chat.getObjectId()).all().sort("timestamp");
+            chatMessages.load();
+
+            listAdapter = new ChatListAdapter(chatMessages, ChatActivity.this, userInfo);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    chatListView.setAdapter(listAdapter);
+                }
+            });
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void v) {
+            super.onPostExecute(v);
+            progress.dismiss();
+        }
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
+    }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(name, context, attrs);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    private void sendMessage(final String messageText, final String author) {
         if (messageText.trim().length() == 0)
             return;
 
         final ChatMessage message = new ChatMessage();
+        message.setUser(chat.getGloopUser());
         message.setChatId(chat.getObjectId());
         message.setMessageStatus(Status.SENT);
         message.setMessageText(messageText);
-        message.setUserType(userType);
+        message.setAuthor(author);
         message.setMessageTime(new Date().getTime());
         chatMessages.add(message);
-
-        if (listAdapter != null)
-            listAdapter.notifyDataSetChanged();
-
-        // Mark message as delivered after one second
-
-        final ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
-
-        exec.schedule(new Runnable() {
-            @Override
-            public void run() {
-                message.setMessageStatus(Status.DELIVERED);
-
-                final ChatMessage message = new ChatMessage();
-                message.setChatId(chat.getObjectId());
-                message.setMessageStatus(Status.SENT);
-                message.setMessageText(messageText);
-                message.setUserType(UserType.SELF);
-                message.setMessageTime(new Date().getTime());
-                chatMessages.add(message);
-
-                ChatActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        listAdapter.notifyDataSetChanged();
-                    }
-                });
-
-
-            }
-        }, 1, TimeUnit.SECONDS);
-
     }
 
     @Override
@@ -115,23 +141,11 @@ public class ChatActivity extends EmojiCompatActivity implements NotificationCen
         NotificationCenter.getInstance().removeObserver(this, NotificationCenter.emojiDidLoaded);
     }
 
-    /**
-     * Get the system status bar height
-     *
-     * @return
-     */
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
+
+        chatMessages.removeOnChangeListeners();
     }
 
     /**
@@ -143,10 +157,6 @@ public class ChatActivity extends EmojiCompatActivity implements NotificationCen
     @Override
     public void didReceivedNotification(int id, Object... args) {
         if (id == NotificationCenter.emojiDidLoaded) {
-//            if (emojiView != null) {
-//                emojiView.invalidateViews();
-//            }
-
             if (chatListView != null) {
                 chatListView.invalidateViews();
             }

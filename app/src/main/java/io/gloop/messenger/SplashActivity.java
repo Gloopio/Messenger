@@ -27,7 +27,6 @@ public class SplashActivity extends Activity {
         super.onPostCreate(savedInstanceState);
 
         Fabric.with(this, new Crashlytics());
-//        FacebookSdk.sdkInitialize(getApplicationContext());
         SharedPreferencesStore.setContext(getBaseContext());
 
         if (SharedPreferencesStore.isFirstStart())

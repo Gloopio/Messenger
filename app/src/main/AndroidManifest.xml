@@ -78,7 +78,7 @@
 
         <meta-data
             android:name="io.gloop.ApiKey"
-            android:value="cdf136c7-1a95-4a0f-8907-ce4ed87e3c84"/>
+            android:value="14e71f9b-86c1-4099-ae63-1cf6538ba608"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"

@@ -37,9 +37,6 @@ import io.gloop.messenger.utils.SharedPreferencesStore;
 import io.gloop.messenger.utils.Store;
 import io.gloop.permissions.GloopUser;
 
-import static io.gloop.messenger.ListFragment.VIEW_CHATS;
-import static io.gloop.messenger.ListFragment.VIEW_CLOSED_TASKS;
-
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -78,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Load the currently logged in GloopUser of the app.
         this.owner = Gloop.getOwner();
         // Load user info
-        userInfo = Gloop.allLocal(UserInfo.class)
+        userInfo = Gloop.all(UserInfo.class)
                 .where()
                 .equalsTo("phone", owner.getName())
                 .first();
@@ -101,31 +98,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         appBar = (AppBarLayout) findViewById(R.id.appbar);
-//        header = (LinearLayout) findViewById(R.id.header);
-
-//        username = (TextView) findViewById(R.id.username);
         View navigationHeader = navigationView.getHeaderView(0);
         navHeaderUsername = (TextView) navigationHeader.findViewById(R.id.nav_header_username);
+        navHeaderUsername.setText(userInfo.getUserName());
         navHeaderUserImage = (CircleImageView) navigationHeader.findViewById(R.id.nav_header_user_image);
 
         navHeader = (LinearLayout) navigationHeader.findViewById(R.id.nav_header_background);
 
 
-//        userImage = (CircleImageView) findViewById(R.id.user_image);
-//        userImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new UserProfileDialog(MainActivity.this, userImage, userInfo);
-//            }
-//        });
-
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_menu_item_new);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Context context = view.getContext();
-//                Intent intent = new Intent(context, ChatActivity.class);
-//                context.startActivity(intent);
                 new ChooseUserDialog(MainActivity.this, userInfo);
             }
         });
@@ -191,8 +175,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        final ListFragment frag1 = ListFragment.newInstance(VIEW_CHATS, userInfo, owner);
-        final ContactsFragment frag2 = ContactsFragment.newInstance(VIEW_CLOSED_TASKS, userInfo, owner);
+        final ListFragment frag1 = ListFragment.newInstance(userInfo, owner);
+        final ContactsFragment frag2 = ContactsFragment.newInstance(userInfo);
         adapter.addFragment(frag1, "Chats");
         adapter.addFragment(frag2, "Contacts");
         viewPager.setAdapter(adapter);
@@ -249,59 +233,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                setUserInfo();
-//            }
-//        }).start();
     }
-
-//    private void setUserInfo() {
-//        if (userInfo != null) {
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Uri imageURL = userInfo.getImageURL();
-//                    if (imageURL != null) {
-//                        Picasso.with(getApplicationContext())
-//                                .load(imageURL)
-//                                .into(userImage);
-//
-//                        Picasso.with(getApplicationContext())
-//                                .load(imageURL)
-//                                .into(navHeaderUserImage);
-//                    } else {
-//                        userImage.setVisibility(View.GONE);
-//                        navHeaderUserImage.setVisibility(View.GONE);
-//                    }
-//
-//                    if (userInfo.getUserName() == null || userInfo.getUserName().equals("")) {
-////                        username.setVisibility(View.GONE);
-//                        navHeaderUsername.setVisibility(View.GONE);
-//                    } else {
-////                        username.setText(userInfo.getUserName());
-//                        navHeaderUsername.setText(userInfo.getUserName());
-//                    }
-//                }
-//            });
-//        } else {
-//            ViewGroup.LayoutParams layoutParams = appBar.getLayoutParams();
-//            layoutParams.height = 175;
-//            appBar.setLayoutParams(layoutParams);
-//            header.setVisibility(View.GONE);
-//
-//            ViewGroup.LayoutParams layoutParams1 = navHeader.getLayoutParams();
-//            layoutParams1.height =25;
-//            navHeader.setLayoutParams(layoutParams1);
-//
-//
-//            userImage.setVisibility(View.GONE);
-////            username.setVisibility(View.GONE);
-//            navHeaderUsername.setVisibility(View.GONE);
-//            navHeaderUserImage.setVisibility(View.GONE);
-//        }
-//    }
 
     @Override
     public void onResume() {

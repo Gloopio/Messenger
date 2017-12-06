@@ -3,7 +3,6 @@ package io.gloop.messenger.model;
 import io.gloop.GloopObject;
 import io.gloop.annotations.Serializer;
 import io.gloop.messenger.serializers.StatusSerializer;
-import io.gloop.messenger.serializers.UserTypeSerializer;
 
 public class ChatMessage extends GloopObject {
 
@@ -12,8 +11,6 @@ public class ChatMessage extends GloopObject {
     private String author;
     @Serializer(StatusSerializer.class)
     private Status messageStatus;
-    @Serializer(UserTypeSerializer.class)
-    private UserType userType;
 
     public String getChatId() {
         return chatId;
@@ -59,11 +56,4 @@ public class ChatMessage extends GloopObject {
         return messageStatus;
     }
 
-    public void setUserType(UserType userType) {
-        this.userType = userType;
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
 }

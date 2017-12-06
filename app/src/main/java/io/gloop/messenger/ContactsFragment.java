@@ -1,9 +1,12 @@
 package io.gloop.messenger;
 
-import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -32,28 +35,26 @@ import io.gloop.GloopList;
 import io.gloop.exceptions.GloopLoadException;
 import io.gloop.messenger.model.Chat;
 import io.gloop.messenger.model.UserInfo;
-import io.gloop.messenger.utils.ContactUtil;
 import io.gloop.messenger.utils.Store;
 import io.gloop.permissions.GloopGroup;
-import io.gloop.permissions.GloopUser;
+import io.gloop.query.GloopQuery;
 
 public class ContactsFragment extends Fragment {
 
-    private final static String SELECTED = "selected";
-    private final static String NOT_SELECTED = "notSelected";
-
     private UserInfoAdapter userInfoAdapter;
+
+    private Context context;
+
+    private UserInfo userInfo;
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    public static ContactsFragment newInstance(int operation, UserInfo userinfo, GloopUser owner) {
+    public static ContactsFragment newInstance(UserInfo userInfo) {
         ContactsFragment f = new ContactsFragment();
-//        Bundle args = new Bundle();
-//        args.putInt("operation", operation);
-//        args.putSerializable("userinfo", userinfo);
-//        args.putSerializable("owner", owner);
-//        f.setArguments(args);
+        Bundle args = new Bundle();
+        args.putSerializable("userinfo", userInfo);
+        f.setArguments(args);
         return f;
     }
 
@@ -61,6 +62,8 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        userInfo = (UserInfo) getArguments().getSerializable("userinfo");
     }
 
     @Nullable
@@ -151,14 +154,12 @@ public class ContactsFragment extends Fragment {
 
         @Override
         protected GloopList<UserInfo> doInBackground(Void... urls) {
-            Activity activity = getActivity();
-//            while (activity == null)
-//                activity = getActivity();
-
-            GloopList<UserInfo> userInfos = ContactUtil.syncContacts(activity);
+//            GloopList<UserInfo> userInfos = syncContacts(); TODO
+            GloopList<UserInfo> userInfos = Gloop.all(UserInfo.class).where().notEqualsTo("phone", userInfo.getPhone()).all();
 
             if (userInfos != null)
                 userInfos.load();
+
             return userInfos;
         }
 
@@ -176,6 +177,60 @@ public class ContactsFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onAttach(Context c) {
+        super.onAttach(c);
+        context = c;
+    }
+
+    public GloopList<UserInfo> syncContacts() {
+
+        List<String> phoneNumbers = getPhoneNumbers();
+
+        if (phoneNumbers != null && phoneNumbers.size() > 0) {
+
+            GloopQuery<UserInfo> where = Gloop.all(UserInfo.class).where();
+
+            int i = 0;
+            for (String phoneNumber : phoneNumbers) {
+                phoneNumber = phoneNumber.replace(" ", "").replace("-", "");
+                if (i < phoneNumbers.size() - 1) {
+                    where = where.equalsTo("phone", phoneNumber).or();
+                    i++;
+                } else
+                    return where.equalsTo("phone", phoneNumber).all();
+            }
+        }
+        return null;
+    }
+
+
+    public List<String> getPhoneNumbers() {
+        ContentResolver cr = context.getContentResolver(); //Activity/Application android.content.Context
+        Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            ArrayList<String> alContacts = new ArrayList<String>();
+            do {
+                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+
+                if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                    Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
+                    while (pCur.moveToNext()) {
+                        String contactNumber = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        alContacts.add(contactNumber);
+                        break;
+                    }
+                    pCur.close();
+                }
+
+            } while (cursor.moveToNext());
+
+            return alContacts;
+
+        }
+        return null;
     }
 
 
@@ -283,14 +338,15 @@ public class ContactsFragment extends Fragment {
         // check if there exists already a chat of these users.
 
         Chat existingChat = Gloop.all(Chat.class).where()
-                .equalsTo("user1", ownerUserInfo).and().equalsTo("user1", userInfo)
+                .equalsTo("user1", ownerUserInfo).and().equalsTo("user2", userInfo)
                 .or()
-                .equalsTo("user1", userInfo).and().equalsTo("user1", ownerUserInfo)
+                .equalsTo("user1", userInfo).and().equalsTo("user2", ownerUserInfo)
                 .first();
 
         if (existingChat != null) {
             Intent intent = new Intent(getContext(), ChatActivity.class);
-            intent.putExtra("chat", existingChat);
+            intent.putExtra(ChatActivity.CHAT, existingChat);
+            intent.putExtra(ChatActivity.USER_INFO, ownerUserInfo);
             getContext().startActivity(intent);
         } else {
             // create new chat
@@ -309,7 +365,8 @@ public class ContactsFragment extends Fragment {
             chat.save();
 
             Intent intent = new Intent(getContext(), ChatActivity.class);
-            intent.putExtra("chat", chat);
+            intent.putExtra(ChatActivity.CHAT, chat);
+            intent.putExtra(ChatActivity.USER_INFO, ownerUserInfo);
             getContext().startActivity(intent);
 
         }

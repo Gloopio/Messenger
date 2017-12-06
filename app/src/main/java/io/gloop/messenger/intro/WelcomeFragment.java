@@ -49,7 +49,7 @@ public class WelcomeFragment extends Fragment implements ISlideBackgroundColorHo
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment newFragment = new Register1Fragment();
+                Fragment newFragment = new RegisterPhoneFragment();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, newFragment);
                 transaction.addToBackStack(null);
