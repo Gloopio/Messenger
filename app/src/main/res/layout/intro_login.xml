@@ -3,6 +3,7 @@
     android:id="@+id/intro_welcom_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/splashscreen_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,13 +23,17 @@
             app:flagPaddingEnd="4dp"
             app:flagPaddingStart="4dp"
             app:flagPaddingTop="4dp"
-            app:textColor="#000000"
+            app:backgroundTint="@color/colorPrimary"
+            app:textColor="@color/colorPrimary"
             app:textSize="14sp"/>
 
         <EditText
             android:inputType="textPassword"
             android:id="@+id/intro_login_password"
             android:layout_width="match_parent"
+            android:textColorHint="@color/hint_color"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/colorPrimary"
             android:layout_height="wrap_content"/>
 
         <Button

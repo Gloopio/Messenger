@@ -98,7 +98,7 @@ dependencies {
     compile 'com.android.support:design:25.4.0'
     compile 'com.android.support:appcompat-v7:25.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.github.TR4Android:Swipeable-RecyclerView:0.2.0'
+//    compile 'com.github.TR4Android:Swipeable-RecyclerView:0.2.0'
     compile 'com.github.paolorotolo:appintro:4.1.0'
     testCompile 'junit:junit:4.12'
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {

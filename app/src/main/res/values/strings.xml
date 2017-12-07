@@ -46,8 +46,8 @@
 
     <string name="menu_night_mode">Night mode</string>
     <string name="menu_night_mode_system">Follow system</string>
-    <string name="menu_night_mode_day">Day (always)</string>
-    <string name="menu_night_mode_night">Night (always)</string>
+    <string name="menu_night_mode_day">Always Day</string>
+    <string name="menu_night_mode_night">Always Night</string>
     <string name="menu_night_mode_auto">Auto</string>
 
     <string name="action_sign_in_short">Sign in</string>

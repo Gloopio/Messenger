@@ -5,7 +5,7 @@
     android:id="@+id/settings_night_mode_dialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/popupBackground"
+    android:background="@drawable/splashscreen_background"
     android:orientation="vertical">
 
     <ImageView
@@ -42,7 +42,7 @@
                     android:id="@+id/settings_night_mode_follow_system"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@android:color/white"
+                    android:buttonTint="@color/colorPrimary"
                     android:text="@string/menu_night_mode_system"
                     android:textColor="@android:color/white"/>
 
@@ -50,7 +50,7 @@
                     android:id="@+id/settings_night_mode_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@android:color/white"
+                    android:buttonTint="@color/colorPrimary"
                     android:text="@string/menu_night_mode_day"
                     android:textColor="@android:color/white"/>
 
@@ -58,7 +58,7 @@
                     android:id="@+id/settings_night_mode_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@android:color/white"
+                    android:buttonTint="@color/colorPrimary"
                     android:text="@string/menu_night_mode_night"
                     android:textColor="@android:color/white"/>
 
@@ -66,7 +66,7 @@
                     android:id="@+id/settings_night_mode_auto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@android:color/white"
+                    android:buttonTint="@color/colorPrimary"
                     android:text="@string/menu_night_mode_auto"
                     android:textColor="@android:color/white"/>
             </RadioGroup>
