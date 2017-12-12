@@ -20,8 +20,6 @@ public class App extends Application {
         Intent startServiceIntent = new Intent(this, BackgroundService.class);
         startService(startServiceIntent);
 
-//        NativeLoader.initNativeLibs(App.getInstance());
-
     }
 
     public static App getInstance()

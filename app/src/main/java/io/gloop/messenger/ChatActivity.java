@@ -21,13 +21,13 @@ import io.gloop.messenger.model.Chat;
 import io.gloop.messenger.model.ChatMessage;
 import io.gloop.messenger.model.Status;
 import io.gloop.messenger.model.UserInfo;
+import io.gloop.messenger.utils.Store;
 import io.gloop.utils.TimeUtil;
 
 
-public class ChatActivity extends EmojiCompatActivity implements NotificationCenter.NotificationCenterDelegate, WhatsAppPanelEventListener {
+public class ChatActivity extends EmojiCompatActivity implements WhatsAppPanelEventListener {
 
     public static final String CHAT = "chat";
-    public static final String USER_INFO = "userInfo";
 
     private ListView chatListView;
     private GloopList<ChatMessage> chatMessages;
@@ -57,15 +57,13 @@ public class ChatActivity extends EmojiCompatActivity implements NotificationCen
         getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.splashscreen_background));
 
         chat = (Chat) getIntent().getSerializableExtra(ChatActivity.CHAT);
-        userInfo = (UserInfo) getIntent().getSerializableExtra(ChatActivity.USER_INFO);
+        userInfo = Store.getOwnerUserInfo();
 
         chatListView = (ListView) findViewById(R.id.chat_list_view);
 
-        NotificationCenter.getInstance().addObserver(this, NotificationCenter.emojiDidLoaded);
-
         mBottomPanel = new WhatsAppPanel(this, this, R.color.colorPrimary);
 
-       new LoadTask().execute();
+        new LoadTask().execute();
 
     }
 
@@ -137,29 +135,14 @@ public class ChatActivity extends EmojiCompatActivity implements NotificationCen
     public void onDestroy() {
         super.onDestroy();
 
-        NotificationCenter.getInstance().removeObserver(this, NotificationCenter.emojiDidLoaded);
+        chatMessages.removeOnChangeListeners();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
         chatMessages.removeOnChangeListeners();
     }
 
-    /**
-     * Updates emoji views when they are complete loading
-     *
-     * @param id
-     * @param args
-     */
-    @Override
-    public void didReceivedNotification(int id, Object... args) {
-        if (id == NotificationCenter.emojiDidLoaded) {
-            if (chatListView != null) {
-                chatListView.invalidateViews();
-            }
-        }
-    }
 
 }

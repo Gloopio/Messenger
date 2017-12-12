@@ -30,6 +30,7 @@ public class ChatListAdapter extends BaseAdapter {
         this.context = context;
         this.ownerUserInfo = ownerUserInfo;
 
+        this.chatMessages.removeOnChangeListeners();
         this.chatMessages.addOnChangeListener(new GloopOnChangeListener() {
             @Override
             public void onChange() {

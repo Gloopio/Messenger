@@ -75,32 +75,6 @@ public class LoginFragment extends Fragment implements ISlideBackgroundColorHold
         return layoutContainer;
     }
 
-//    private String getPhoneNumber() {
-//
-//
-//        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//            return null;
-//        } else {
-//            TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-//            if (tMgr != null) {
-//                return tMgr.getLine1Number();
-//            } else {
-//                return null;
-//            }
-//        }
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        if (requestCode == PERMISSION_READ_STATE) {
-//            TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-//            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//                return;
-//            }
-//            phoneNumber.setText(tMgr.getLine1Number());
-//        }
-//    }
-
     @Override
     public int getDefaultBackgroundColor() {
         // Return the default background color of the slide.

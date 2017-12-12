@@ -50,11 +50,11 @@ public class ContactsFragment extends Fragment {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    public static ContactsFragment newInstance(UserInfo userInfo) {
+    public static ContactsFragment newInstance() {
         ContactsFragment f = new ContactsFragment();
-        Bundle args = new Bundle();
-        args.putSerializable("userinfo", userInfo);
-        f.setArguments(args);
+//        Bundle args = new Bundle();
+//        args.putSerializable("userinfo", userInfo);
+//        f.setArguments(args);
         return f;
     }
 
@@ -63,7 +63,7 @@ public class ContactsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        userInfo = (UserInfo) getArguments().getSerializable("userinfo");
+        userInfo = Store.getOwnerUserInfo();
     }
 
     @Nullable
@@ -346,7 +346,6 @@ public class ContactsFragment extends Fragment {
         if (existingChat != null) {
             Intent intent = new Intent(getContext(), ChatActivity.class);
             intent.putExtra(ChatActivity.CHAT, existingChat);
-            intent.putExtra(ChatActivity.USER_INFO, ownerUserInfo);
             getContext().startActivity(intent);
         } else {
             // create new chat
@@ -366,7 +365,6 @@ public class ContactsFragment extends Fragment {
 
             Intent intent = new Intent(getContext(), ChatActivity.class);
             intent.putExtra(ChatActivity.CHAT, chat);
-            intent.putExtra(ChatActivity.USER_INFO, ownerUserInfo);
             getContext().startActivity(intent);
 
         }

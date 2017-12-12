@@ -213,16 +213,13 @@ public class ListFragment extends Fragment {
             else
                 holder.mContentView.setText(chat.getUser1().getUserName());
 
-//            final int color = task.getColor();
-//            holder.mImage.setBackgroundColor(color);
-
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ChatActivity.class);
+//                    intent.putExtra("bundle", new Bundle().putParcelable("chat", chat));
                     intent.putExtra(ChatActivity.CHAT, chat);
-                    intent.putExtra(ChatActivity.USER_INFO, userInfo);
                     context.startActivity(intent);
 //                    progress.dismiss();
                 }

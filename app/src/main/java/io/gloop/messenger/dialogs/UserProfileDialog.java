@@ -13,8 +13,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.gloop.messenger.R;
 import io.gloop.messenger.model.UserInfo;
@@ -45,9 +43,10 @@ public class UserProfileDialog {
         });
 
         CircleImageView profileImage = (CircleImageView) dialog.findViewById(R.id.profile_user_image);
-        Picasso.with(activity.getApplicationContext())
-                .load(userInfo.getImageURL())
-                .into(profileImage);
+        profileImage.setImageBitmap(userInfo.getPicture());
+//        Picasso.with(activity.getApplicationContext())
+//                .load(userInfo.getImageURL())
+//                .into(profileImage);
 
         TextView profileUserName = (TextView) dialog.findViewById(R.id.profile_user_name);
         profileUserName.setText(userInfo.getUserName());

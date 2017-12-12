@@ -72,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-//        Gloop.initialize(this);
-
         // Load the currently logged in GloopUser of the app.
         this.owner = Gloop.getOwner();
         // Load user info
@@ -113,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ChooseUserDialog(MainActivity.this, userInfo);
+                new ChooseUserDialog(MainActivity.this);
             }
         });
 
@@ -179,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
         final ListFragment frag1 = ListFragment.newInstance(userInfo, owner);
-        final ContactsFragment frag2 = ContactsFragment.newInstance(userInfo);
+        final ContactsFragment frag2 = ContactsFragment.newInstance();
         adapter.addFragment(frag1, "Chats");
         adapter.addFragment(frag2, "Contacts");
         viewPager.setAdapter(adapter);

@@ -12,7 +12,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.StrictMode;
 import android.util.Log;
-import android.widget.Toast;
 
 import io.gloop.Gloop;
 import io.gloop.GloopList;
@@ -28,12 +27,18 @@ import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
  */
 
 public class BackgroundService extends Service {
-    private Looper mServiceLooper;
-    private ServiceHandler mServiceHandler;
 
-    private long timestamp;
+    long INITIAL_BACKOFF = 30;
+    long backoff = INITIAL_BACKOFF;
+    long MAX_BACKOFF = INITIAL_BACKOFF * 6;
 
-    // Handler that receives messages from the thread
+    private long backoff() {
+        backoff = backoff + INITIAL_BACKOFF;
+        if (backoff > MAX_BACKOFF)
+            backoff = MAX_BACKOFF;
+        return backoff;
+    }
+
     private final class ServiceHandler extends Handler {
         public ServiceHandler(Looper looper) {
             super(looper);
@@ -41,40 +46,6 @@ public class BackgroundService extends Service {
 
         @Override
         public void handleMessage(Message msg) {
-
-//            Toast.makeText(getApplicationContext(), "check", Toast.LENGTH_SHORT).show();
-//            }
-//        }, 1000);
-
-
-//            AlarmManager am=(AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-//            Intent i = new Intent(getApplicationContext(), BackgroundService.class);
-//            PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 0, i, 0);
-//            am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000, pi); // Millisec * Second * Minute
-
-
-//            Toast.makeText(getApplicationContext(), "check", Toast.LENGTH_LONG).show();
-//
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Log.i("Messenger", "Check");
-//                    Toast.makeText(getApplicationContext(), "check", Toast.LENGTH_SHORT).show();
-//                }
-//            }, 1000);
-
-
-            // Normally we would do some work here, like download a file.
-            // For our sample, we just sleep for 5 seconds.
-//            try {
-//                Thread.sleep(5000);
-//            } catch (InterruptedException e) {
-//                // Restore interrupt status.
-//                Thread.currentThread().interrupt();
-//            }
-            // Stop the service using the startId, so that we don't stop
-            // the service in the middle of handling another job
-//            stopSelf(msg.arg1);
         }
     }
 
@@ -96,33 +67,39 @@ public class BackgroundService extends Service {
             e.printStackTrace();
         }
 
-        if (Gloop.login(SharedPreferencesStore.getEmail(), SharedPreferencesStore.getPassword())) {
+        int tries = 5;
+        while (tries >= 0) {
+            try {
+                if (Gloop.login(SharedPreferencesStore.getEmail(), SharedPreferencesStore.getPassword())) {
 
-            mServiceLooper = thread.getLooper();
-            mServiceHandler = new ServiceHandler(mServiceLooper);
-            mServiceHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    while (true) {
-                        checkForNewMassages();
-                        try {
-//                        Thread.sleep(300000);   // 5 min
-//                            Thread.sleep(60000);   // 1 min
-                            Thread.sleep(30000);   // 1 min
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                    Looper mServiceLooper = thread.getLooper();
+                    ServiceHandler mServiceHandler = new ServiceHandler(mServiceLooper);
+                    mServiceHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            while (true) {
+                                try {
+                                    long sleepTime = checkForNewMassages();
+                                    Thread.sleep(sleepTime * 1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
-                    }
+                    });
+                    tries = -1;
+                } else {
+                    tries--;
+                    Log.e("Messenger", "Login failed");
                 }
-            });
-        } else {
-            Log.e("Messenger", "Login failed");
-            Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Log.i("MessengerBackground", "Login failed, try number: " + tries);
+                tries--;
+            }
         }
     }
 
-
-    private void checkForNewMassages() {
+    private long checkForNewMassages() {
         long timestamp = SharedPreferencesStore.getLastTimeStamp();
         GloopList<ChatMessage> messages = Gloop.all(ChatMessage.class)
                 .where()
@@ -131,22 +108,27 @@ public class BackgroundService extends Service {
                 .notEqualsTo("author", Gloop.getOwner().getUserId())
                 .all();
 
+        long sleepTime = backoff();
+
         for (ChatMessage message : messages) {
             showNotification(message);
+            sleepTime = INITIAL_BACKOFF;
         }
 
 
         Log.d("Messenger", messages.toString());
+        Log.d("Messenger", "Sleep time: " + sleepTime * 1000 + " ms");
 
         SharedPreferencesStore.setCurrentTimestamp();
-//        }
+
+        return sleepTime;
     }
 
     private void showNotification(ChatMessage message) {
 
         Chat chat = Gloop.all(Chat.class).where().equalsTo("objectId", message.getChatId()).first();
 
-        if (chat != null ) {
+        if (chat != null) {
 
             UserInfo ownerUserInfo = Gloop.all(UserInfo.class)
                     .where()
@@ -155,10 +137,7 @@ public class BackgroundService extends Service {
 
             Intent intent = new Intent(this, ChatActivity.class);
             intent.putExtra(ChatActivity.CHAT, chat);
-            intent.putExtra(ChatActivity.USER_INFO, ownerUserInfo);
             PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-//        UserInfo user = Gloop.all(UserInfo.class).where().equalsTo("phone", message.getAuthor()).first();
 
             UserInfo user;
 
@@ -168,8 +147,6 @@ public class BackgroundService extends Service {
                 user = chat.getUser1();
             }
 
-// build notification
-// the addAction re-use the same intent to keep the example short
             Notification n = new Notification.Builder(this)
                     .setContentTitle("New message from " + user.getUserName())
                     .setContentText(message.getMessageText())
@@ -190,20 +167,15 @@ public class BackgroundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
-
-        // If we get killed, after returning from here, restart
         return START_STICKY;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        // We don't provide binding, so return null
         return null;
     }
 
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
     }
 }

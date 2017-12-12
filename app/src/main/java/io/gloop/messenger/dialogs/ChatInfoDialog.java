@@ -38,18 +38,13 @@ public class ChatInfoDialog {
 
 
         RelativeLayout layout = (RelativeLayout) dialog.findViewById(R.id.pop_stat_view);
-//        layout.setBackgroundColor(task.getColor());
-
         TextView tvBoardName = (TextView) dialog.findViewById(R.id.dialog_info_board_name);
-//        tvBoardName.setText(task.getTitle());
 
         Button membersButton = (Button) dialog.findViewById(R.id.dialog_info_btn_add_member);
 
         membersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                new TaskMembersDialog(context, userInfo, task);
-
                 revealShow(dialogView, false, dialog, x, y);
             }
         });

@@ -1,11 +1,13 @@
 package io.gloop.messenger.model;
 
-import android.net.Uri;
+import android.graphics.Bitmap;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.gloop.GloopObject;
+import io.gloop.annotations.Serializer;
+import io.gloop.serializers.custom.BitmapSerializer;
 
 /**
  * Created by Alex Untertrifaller on 20.09.17.
@@ -14,14 +16,14 @@ import io.gloop.GloopObject;
 public class UserInfo extends GloopObject {
 
     private String phone;
-    private String imageURL;
+    @Serializer(BitmapSerializer.class)
+    private Bitmap picture;
     private String userName;
     private long lastTimeOnline;
     private List<String> favories = new ArrayList<>();
 
     public UserInfo() {
     }
-
 
     public String getPhone() {
         return phone;
@@ -31,16 +33,20 @@ public class UserInfo extends GloopObject {
         this.phone = phone;
     }
 
-    public Uri getImageURL() {
-        if (imageURL != null)
-            return Uri.parse(imageURL);
-        else
-            return null;
+    public Bitmap getPicture() {
+        return picture;
     }
 
-    public void setImageURL(Uri imageURL) {
-        if (imageURL != null)
-            this.imageURL = imageURL.toString();
+    public void setPicture(Bitmap picture) {
+        this.picture = picture;
+    }
+
+    public long getLastTimeOnline() {
+        return lastTimeOnline;
+    }
+
+    public void setLastTimeOnline(long lastTimeOnline) {
+        this.lastTimeOnline = lastTimeOnline;
     }
 
     public String getUserName() {
@@ -51,10 +57,6 @@ public class UserInfo extends GloopObject {
         this.userName = userName;
     }
 
-
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
-    }
 
     public List<String> getFavories() {
         return favories;

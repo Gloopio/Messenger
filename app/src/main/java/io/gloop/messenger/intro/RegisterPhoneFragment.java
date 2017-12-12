@@ -41,14 +41,6 @@ public class RegisterPhoneFragment extends Fragment implements ISlideBackgroundC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutContainer = (ConstraintLayout) inflater.inflate(R.layout.intro_register_phone_number, container, false);
 
-//        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_PHONE_STATE}, PERMISSION_READ_STATE);
-//
-//        phoneNumber = (EditText) layoutContainer.findViewById(R.id.intro_phone_number);
-//        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-//            TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-//            phoneNumber.setText(tMgr.getLine1Number());
-//        }
-
         final UserInfo userinfo = new UserInfo();
         userinfo.setUser(Gloop.getOwner().getUserId(), PUBLIC | READ);
 
@@ -70,7 +62,6 @@ public class RegisterPhoneFragment extends Fragment implements ISlideBackgroundC
                     bundle.putSerializable("userInfo", userinfo);
                     newFragment.setArguments(bundle);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-//                transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                     transaction.replace(R.id.fragment_container, newFragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
@@ -83,32 +74,6 @@ public class RegisterPhoneFragment extends Fragment implements ISlideBackgroundC
 
         return layoutContainer;
     }
-
-//    private String getPhoneNumber() {
-//
-//
-//        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//            return null;
-//        } else {
-//            TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-//            if (tMgr != null) {
-//                return tMgr.getLine1Number();
-//            } else {
-//                return null;
-//            }
-//        }
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        if (requestCode == PERMISSION_READ_STATE) {
-//            TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-//            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//                return;
-//            }
-//            phoneNumber.setText(tMgr.getLine1Number());
-//        }
-//    }
 
     @Override
     public int getDefaultBackgroundColor() {

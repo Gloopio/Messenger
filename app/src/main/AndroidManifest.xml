@@ -68,27 +68,11 @@
         </receiver>
         <service android:enabled="true" android:name="io.gloop.messenger.BackgroundService" />
 
-
-
-        <!--<service-->
-        <!--android:name="com.google.android.gms.analytics.AnalyticsService"-->
-        <!--android:enabled="true"-->
-        <!--android:exported="false"/>-->
-
-        <!--<meta-data-->
-        <!--android:name="com.facebook.sdk.ApplicationId"-->
-        <!--android:value="@string/facebook_app_id"/>-->
-
-        <!--<activity-->
-        <!--android:name="com.facebook.FacebookActivity"-->
-        <!--android:configChanges=-->
-        <!--"keyboard|keyboardHidden|screenLayout|screenSize|orientation"-->
-        <!--android:label="@string/app_name"/>-->
         <activity android:name=".AudioRecorder"/>
 
         <meta-data
             android:name="io.gloop.ApiKey"
-            android:value="21c2e4e4-313f-458c-9d6b-0343e04afb55"/>
+            android:value="1274c0f9-7354-4189-bf68-2552e1e62d38"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"

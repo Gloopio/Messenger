@@ -13,7 +13,6 @@ import android.view.ViewAnimationUtils;
 import android.widget.ImageView;
 
 import io.gloop.messenger.R;
-import io.gloop.messenger.model.UserInfo;
 
 /**
  * Created by Alex Untertrifaller on 21.09.17.
@@ -23,7 +22,7 @@ public class ChooseUserDialog {
 
     private Context context;
 
-    public ChooseUserDialog(Context context, final UserInfo userInfo) {
+    public ChooseUserDialog(Context context) {
         this.context = context;
         final View dialogView = View.inflate(context, R.layout.dialog_choose_user, null);
 

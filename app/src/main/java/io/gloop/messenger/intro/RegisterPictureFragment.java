@@ -2,6 +2,7 @@ package io.gloop.messenger.intro;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.io.IOException;
+
 import io.gloop.messenger.R;
 import io.gloop.messenger.model.UserInfo;
 
@@ -24,7 +27,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Alex Untertrifaller on 30.11.17.
  */
 
-public class RegisterPictureFragment extends Fragment  {
+public class RegisterPictureFragment extends Fragment {
 
     private ImageView imageView;
 
@@ -62,7 +65,7 @@ public class RegisterPictureFragment extends Fragment  {
             public void onClick(View view) {
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto , 1);//one can be replaced with any action code
+                startActivityForResult(pickPhoto, 1);//one can be replaced with any action code
             }
         });
         Button next = (Button) layoutContainer.findViewById(R.id.intro_pic_image_next);
@@ -90,18 +93,32 @@ public class RegisterPictureFragment extends Fragment  {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        switch(requestCode) {
+        switch (requestCode) {
             case 0:
-                if(resultCode == RESULT_OK){
-                    Uri selectedImage = imageReturnedIntent.getData();
-                    imageView.setImageURI(selectedImage);
+                if (resultCode == RESULT_OK) {
+                    Bitmap bitmap = (Bitmap) imageReturnedIntent.getExtras().get("data");
+//
+//                    Uri selectedImage = imageReturnedIntent.getData();
+//                    imageView.setImageURI(selectedImage);
+//                    try {
+//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImage);
+                    userInfo.setPicture(bitmap);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
                 }
 
                 break;
             case 1:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
                     imageView.setImageURI(selectedImage);
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImage);
+                        userInfo.setPicture(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
         }
