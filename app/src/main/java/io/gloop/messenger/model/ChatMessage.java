@@ -56,4 +56,14 @@ public class ChatMessage extends GloopObject {
         return messageStatus;
     }
 
+    @Override
+    public String toString() {
+        return "ChatMessage{" +
+                "chatId='" + chatId + '\'' +
+                ", messageText='" + messageText + '\'' +
+                ", author='" + author + '\'' +
+                ", messageStatus=" + messageStatus +
+                ", messageTime=" + messageTime +
+                '}';
+    }
 }

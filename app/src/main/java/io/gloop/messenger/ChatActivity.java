@@ -12,8 +12,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ListView;
 
-import java.util.Date;
-
 import br.com.instachat.emojilibrary.controller.WhatsAppPanel;
 import br.com.instachat.emojilibrary.model.layout.EmojiCompatActivity;
 import br.com.instachat.emojilibrary.model.layout.WhatsAppPanelEventListener;
@@ -23,6 +21,7 @@ import io.gloop.messenger.model.Chat;
 import io.gloop.messenger.model.ChatMessage;
 import io.gloop.messenger.model.Status;
 import io.gloop.messenger.model.UserInfo;
+import io.gloop.utils.TimeUtil;
 
 
 public class ChatActivity extends EmojiCompatActivity implements NotificationCenter.NotificationCenterDelegate, WhatsAppPanelEventListener {
@@ -130,7 +129,7 @@ public class ChatActivity extends EmojiCompatActivity implements NotificationCen
         message.setMessageStatus(Status.SENT);
         message.setMessageText(messageText);
         message.setAuthor(author);
-        message.setMessageTime(new Date().getTime());
+        message.setMessageTime(TimeUtil.currentTimestamp());
         chatMessages.add(message);
     }
 

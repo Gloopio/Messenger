@@ -12,7 +12,6 @@ public class OnBootBroadcastReceiver extends BroadcastReceiver {
             Log.i("Messenger", "OnBootBroadcastReceiver started");
             Intent startServiceIntent = new Intent(context, BackgroundService.class);
             context.startService(startServiceIntent);
-
         }
     }
 }

@@ -28,7 +28,6 @@ public class ChooseUserDialog {
         final View dialogView = View.inflate(context, R.layout.dialog_choose_user, null);
 
         final Dialog dialog = new Dialog(context, R.style.MyAlertDialogStyle);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(dialogView);
 
         ImageView imageView = (ImageView) dialog.findViewById(R.id.closeDialogImg);

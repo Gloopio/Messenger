@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
+//        Gloop.initialize(this);
+
         // Load the currently logged in GloopUser of the app.
         this.owner = Gloop.getOwner();
         // Load user info
@@ -100,7 +102,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         appBar = (AppBarLayout) findViewById(R.id.appbar);
         View navigationHeader = navigationView.getHeaderView(0);
         navHeaderUsername = (TextView) navigationHeader.findViewById(R.id.nav_header_username);
-        navHeaderUsername.setText(userInfo.getUserName());
+        if (userInfo != null)
+            navHeaderUsername.setText(userInfo.getUserName());
         navHeaderUserImage = (CircleImageView) navigationHeader.findViewById(R.id.nav_header_user_image);
 
         navHeader = (LinearLayout) navigationHeader.findViewById(R.id.nav_header_background);

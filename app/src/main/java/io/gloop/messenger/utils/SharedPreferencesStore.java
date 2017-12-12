@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatDelegate;
 
+import io.gloop.utils.TimeUtil;
+
 import static io.gloop.messenger.SplashActivity.SHARED_PREFERENCES_FIRST_START;
 
 /**
@@ -18,6 +20,7 @@ public class SharedPreferencesStore {
     private static final String SHARED_PREFERENCES_NAME = "user";
     private static final String SHARED_PREFERENCES_USER_EMAIL = "user_email";
     private static final String SHARED_PREFERENCES_USER_PASSWORD = "user_password";
+    private static final String SHARED_PREFERENCES_TIMESTAMP = "timestamp";
 
     private static final String SHARED_PREFERENCES_NIGHT_MODE = "night_mode";
 
@@ -71,5 +74,16 @@ public class SharedPreferencesStore {
 
     public static int getNightMode() {
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(SHARED_PREFERENCES_NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_YES);
+    }
+
+    public static long getLastTimeStamp() {
+        return PreferenceManager.getDefaultSharedPreferences(context).getLong(SHARED_PREFERENCES_TIMESTAMP, 0);
+    }
+
+    public static void setCurrentTimestamp() {
+        SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor e = getPrefs.edit();
+        e.putLong(SHARED_PREFERENCES_TIMESTAMP, TimeUtil.currentTimestamp());
+        e.apply();
     }
 }

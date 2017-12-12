@@ -1,6 +1,7 @@
 package io.gloop.messenger;
 
 import android.app.Application;
+import android.content.Intent;
 import android.os.Handler;
 
 public class App extends Application {
@@ -15,6 +16,9 @@ public class App extends Application {
         Instance=this;
 
         applicationHandler = new Handler(getInstance().getMainLooper());
+
+        Intent startServiceIntent = new Intent(this, BackgroundService.class);
+        startService(startServiceIntent);
 
 //        NativeLoader.initNativeLibs(App.getInstance());
 
